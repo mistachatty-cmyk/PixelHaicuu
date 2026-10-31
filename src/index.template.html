@@ -7,10 +7,10 @@
 <meta name="robots" content="noindex">
 <title>Kujo-sama · The HaiCuu Experience</title>
 <meta name="description" content="Kujo-sama, the Dalai Llama - an interactive pixel world for The HaiCuu Experience.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
+  @font-face { font-family:'Press Start 2P'; font-style:normal; font-weight:400; font-display:swap; src:url(fonts/press-start-2p-latin-ext.woff2) format('woff2'); unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face { font-family:'Press Start 2P'; font-style:normal; font-weight:400; font-display:swap; src:url(fonts/press-start-2p-latin.woff2) format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
   :root { --pink:#ff8fc4; --hot:#ff2ea6; --ink:#4a1f46; --paper:#fff4fa; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin:0; height:100%; overflow:hidden; background:#bddff9; overscroll-behavior:none; }
@@ -121,7 +121,23 @@
   .tip { font-size:7px; color:#8f2d52; text-align:center; padding:6px 10px 10px; line-height:1.8; background:#f3dcab; }
   #bvtip { margin-top:14px; font-size:7px; color:#8f2d52; line-height:1.8; }
   #bible button { background:#fffaf0; }
+  a.lnk { display:inline-block; font-size:9px; color:var(--ink); background:#ffe566; text-decoration:none; padding:12px 14px; min-height:40px; line-height:1.4;
+    box-shadow: 0 -3px 0 0 #d99a1e inset, 3px 0 0 0 var(--ink), -3px 0 0 0 var(--ink), 0 3px 0 0 var(--ink), 0 -3px 0 0 var(--ink); }
+  a.lnk:focus-visible { outline:3px solid var(--hot); outline-offset:3px; }
+  a.lnk:active { transform:translateY(2px); }
   @media (prefers-reduced-motion: reduce) { .book, #bible.shut .book { transition:opacity .15s; transform:none; } #bcard.flip, #btext.turn { animation:none; } }
+  /* short landscape (phones on their side): tighter controls so Kujo is not hidden behind them */
+  @media (max-height:520px) and (orientation:landscape) {
+    #hud { bottom:calc(6px + env(safe-area-inset-bottom)); gap:4px; }
+    #hud button { min-height:30px; min-width:30px; padding:5px 8px; font-size:7px; }
+    #look { min-width:96px; font-size:7px; }
+    .row { gap:4px; }
+    #track, #credit { display:none; }
+    #haiku { top:8vh; font-size:clamp(8px,2vw,12px); line-height:1.9; }
+    .book { max-height:100%; }
+    #bverse { padding:10px 14px; } #bcard { padding:10px; } #bvt { font-size:15px; margin:4px 4px 8px; }
+    .btnrow { margin-top:8px; }
+  }
   button.pop { animation:bpop .28s cubic-bezier(.2,1.8,.4,1); }
   @keyframes bpop { 0% { transform:scale(.88); } 60% { transform:scale(1.07); } 100% { transform:none; } }
   @media (hover:hover) { button:hover { transform:translateY(-1px); filter:brightness(1.06); } button:active { transform:translateY(2px); } }
@@ -162,6 +178,7 @@
     <div id="bverse">
       <div id="bcard"><p id="bvt"></p><p id="bvr"></p></div>
       <div class="btnrow" id="bread-wrap"><button id="bnew">↻ NEW VERSE</button><button id="bread">READ CHAPTER</button><button id="bcopy">COPY</button></div>
+      <div class="btnrow"><a id="blok" class="lnk" href="https://gsix.online/lokbounce" target="_blank" rel="noopener">GET THE LOK BIBLE ↗</a></div>
       <p id="bvtip">OPEN READ CHAPTER TO BROWSE ANY BOOK</p>
     </div>
     <div id="bchapview" hidden>

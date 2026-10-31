@@ -10,6 +10,9 @@ const FEATURED = [
   ['john', 14, 27], ['isaiah', 41, 10], ['psalms', 27, 1], ['proverbs', 16, 3], ['2-timothy', 1, 7], ['john', 8, 12],
 ];
 
+// Where the "Get the Lok Bible" button goes (owner-provided).
+const LOK_BIBLE_URL = 'https://gsix.online/lokbounce';
+
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) { /* private mode: fine */ } },
@@ -29,6 +32,8 @@ export class BibleReader {
     this.fi = Math.floor(Math.random() * FEATURED.length);
     this.hl = new Set(store.get('hx.hl', []));
     this.fresh = true;
+    const lok = $('blok');
+    if (lok) { if (LOK_BIBLE_URL) lok.href = LOK_BIBLE_URL; else lok.parentNode.remove(); }
     this.bind();
   }
 

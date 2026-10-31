@@ -21,11 +21,12 @@ const particles = new Particles(kit);
 const beat = new BeatEngine();
 const synth = new Synth();
 const world = new SakuraWorld({ stage, kit, particles, theme: VARIANTS[VARIANT_ORDER[0]].theme });
+world.calm = reduce; // reduced motion: no beat-driven petal bursts
 const kujo = new Kujo({ kit, particles, beat });
 world.attachKujo(kujo);
 beat.on((info) => world.onBeat(info));
 // the world tells us about its little events (cardinal, wishes, planted flowers): give them sound and a tiny buzz
-const soundFor = { plant: () => synth.pop(), catch: () => synth.sparkle(), chirp: () => synth.chirp(), cardinal: () => synth.chirp(), wish: () => synth.chime(), firefly: () => synth.boop(), shake: () => synth.boop() };
+const soundFor = { plant: () => synth.pop(), catch: () => synth.sparkle(), chirp: () => synth.chirp(), cardinal: () => synth.chirp(), wish: () => synth.chime(), firefly: () => synth.boop(), shake: () => synth.boop(), pull: () => synth.tick(300) };
 
 // ---- feel helpers ------------------------------------------------------------------------------------------------
 world.onEvent = (name) => { synth.ensure(); const f = soundFor[name]; if (f) f(); };
@@ -180,6 +181,7 @@ attachPointer(stage, {
     const [wx, wy] = world.toWorld(sx, sy);
     if (world.gust(wx, wy, dx * 2, dy * 2, 40) && Math.random() < 0.25) particles.stars(wx, wy, 1, 3, 20);
     world.plant(wx, wy, true);
+    world.pull(wx, wy);
   },
   onTap: (sx, sy) => {
     if (!ready) return;
