@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#2f6fcf">
+<meta name="robots" content="noindex">
+<title>Kujo-sama · The HaiCuu Experience</title>
+<meta name="description" content="Kujo-sama, the Dalai Llama - an interactive pixel world for The HaiCuu Experience.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root { --pink:#ff8fc4; --hot:#ff2ea6; --ink:#4a1f46; --paper:#fff4fa; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin:0; height:100%; overflow:hidden; background:#bddff9; overscroll-behavior:none; }
+  body { font-family:'Press Start 2P', ui-monospace, monospace; color:var(--ink); user-select:none; -webkit-user-select:none; }
+  #stage { position:fixed; left:50%; top:0; transform:translateX(-50%); image-rendering:pixelated; image-rendering:crisp-edges; touch-action:none; cursor:pointer; }
+  .ov { position:fixed; left:0; right:0; pointer-events:none; text-align:center; }
+
+  /* LLAMASTE greeting */
+  #hello { top:50%; transform:translateY(-50%) scale(0); opacity:0; font-size:clamp(20px,7.2vw,60px); line-height:1.25; color:#fff;
+    text-shadow: 0 4px 0 var(--hot), 4px 0 0 var(--hot), -4px 0 0 var(--hot), 0 -4px 0 var(--hot), 4px 4px 0 #b0126f, -4px 4px 0 #b0126f, 0 8px 0 #7a0a4c;
+    letter-spacing:.04em; }
+  #hello small { display:block; margin-top:22px; font-size:clamp(7px,1.6vw,12px); color:var(--paper); text-shadow:2px 2px 0 var(--ink); letter-spacing:.2em; }
+  #hello.show { opacity:1; transform:translateY(-50%) scale(1); transition:transform .55s cubic-bezier(.2,1.7,.4,1), opacity .2s; }
+  #hello.slide { opacity:0; transform:translateY(-190%) scale(.92); transition:transform .75s cubic-bezier(.5,0,.8,.4), opacity .7s ease-in; }
+  #hello.gone { transition:none; }
+
+  /* haiku */
+  #haiku { top:13vh; padding:0 6vw; font-size:clamp(9px,2.5vw,16px); line-height:2.1; color:#fff; text-shadow:2px 2px 0 var(--ink), 0 0 12px rgba(255,255,255,.4); opacity:0; transition:opacity .4s; }
+  #haiku.on { opacity:1; }
+  .w { display:inline-block; opacity:0; transform:translateY(10px) scale(.7); transition:opacity .28s, transform .38s cubic-bezier(.2,1.6,.4,1); }
+  .w.in { opacity:1; transform:none; }
+  .w.out { opacity:0; transform:translateY(-12px) scale(.9); transition:opacity .3s, transform .3s; }
+
+  /* HUD */
+  #brand { top:calc(12px + env(safe-area-inset-top)); left:14px; right:auto; text-align:left; font-size:7px; line-height:1.9; color:#fff; text-shadow:1px 1px 0 var(--ink); opacity:0; transition:opacity 1s; }
+  #brand b { color:#ffe566; font-weight:normal; }
+  #hud { bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; transform:translateY(14px); transition:opacity .8s, transform .8s; }
+  #hud.on { opacity:1; transform:none; }
+  .row { display:flex; gap:6px; align-items:center; justify-content:center; flex-wrap:wrap; pointer-events:none; }
+  button { pointer-events:auto; font:inherit; font-size:9px; color:var(--ink); background:var(--paper); border:0; padding:11px 12px; min-height:40px; min-width:40px; cursor:pointer;
+    box-shadow: 0 -3px 0 0 var(--pink) inset, 3px 0 0 0 var(--ink), -3px 0 0 0 var(--ink), 0 3px 0 0 var(--ink), 0 -3px 0 0 var(--ink); }
+  button:active { transform:translateY(2px); }
+  button[aria-pressed="true"] { background:#ffe566; }
+  button:focus-visible { outline:3px solid var(--hot); outline-offset:3px; }
+  #look { min-width:130px; font-size:8px; }
+  #track { font-size:7px; color:#fff; text-shadow:1px 1px 0 var(--ink); min-height:10px; }
+  #scrollbtn { position:fixed; right:12px; top:50%; transform:translateY(-50%); pointer-events:auto; opacity:0; transition:opacity .8s; }
+  #scrollbtn.on { opacity:1; animation:nudge 1.6s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform:translateY(calc(-50% + 4px)); } }
+  #skip { position:fixed; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); font-size:7px; opacity:.85; }
+  #skip.gone { display:none; }
+  #noscript { position:fixed; inset:0; display:grid; place-items:center; text-align:center; padding:24px; font-size:12px; line-height:2; }
+  @media (prefers-reduced-motion: reduce) { #hello, #hello.show, #hello.slide, .w { transition-duration:.01s; } #scrollbtn.on { animation:none; } }
+</style>
+</head>
+<body>
+<canvas id="stage" aria-label="Kujo-sama sitting under a cherry blossom tree. Tap him to change his look."></canvas>
+<div id="hello" class="ov" role="status">LLAMASTÉ<small>PEACE · HELLO</small></div>
+<div id="haiku" class="ov" aria-live="polite"></div>
+<div id="brand" class="ov"><b>LLAMASTÉ PRODUCTIONS</b><br>EST. 1998</div>
+<button id="scrollbtn" aria-label="Scroll the world">▼</button>
+<div id="hud" class="ov">
+  <div id="track" aria-live="polite"></div>
+  <div class="row">
+    <button id="prev" aria-label="Previous look">◀</button>
+    <button id="look" aria-label="Current look: tap to change">LOOK</button>
+    <button id="next" aria-label="Next look">▶</button>
+  </div>
+  <div class="row">
+    <button id="play" aria-label="Play music" aria-pressed="false">♪ PLAY</button>
+    <button id="mute" aria-label="Sound on/off" aria-pressed="false">SOUND</button>
+    <button id="auto" aria-label="Switch looks automatically" aria-pressed="false">AUTO</button>
+  </div>
+</div>
+<button id="skip" aria-label="Skip intro">SKIP ▶▶</button>
+<noscript><div id="noscript">LLAMASTÉ<br>This page needs JavaScript.</div></noscript>
+<script>/*INLINE_JS*/</script>
+</body>
+</html>
