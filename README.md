@@ -19,6 +19,9 @@ npm run dev       # build + serve on http://localhost:5173
 npm test          # build + verify (no source maps, no service worker, no console calls, no local paths)
 ```
 
+## Two soundtracks: REALITY and PIXEL
+The HUD has a REALITY / PIXEL switch (also in the song sheet). **REALITY** is Cuu Jo's Mixverse, his real tracks from `public/tracks.json`, and is the main soundtrack. **PIXEL** is the built-in Pixel Q Music. Flipping the switch swaps the playlist, plays a pixel wipe, and carries on playing if music was on. The full jukebox page lives at `/mixverse/` (`src/mixverse.*`, built by `tools/build.mjs`, track list in `public/mixverse/manifest.json`).
+
 ## Add music
 See `public/music/README.md`. List tracks in `public/tracks.json` with optional `bpm`, `offset`, `variant`, `theme`.
 
