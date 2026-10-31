@@ -9,7 +9,7 @@
     "build": "node tools/build.mjs",
     "verify": "node tools/verify-dist.mjs",
     "serve": "node tools/serve.mjs",
-    "test": "npm run build && npm run verify",
+    "test": "npm run build && npm run verify && node tools/verify-kujo.mjs",
     "dev": "npm run build && npm run serve"
   },
   "devDependencies": {

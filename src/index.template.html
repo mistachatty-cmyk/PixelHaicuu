@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2f6fcf">
 <meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="favicon.png">
 <title>Kujo-sama · The HaiCuu Experience</title>
 <meta name="description" content="Kujo-sama, the Dalai Llama - an interactive pixel world for The HaiCuu Experience.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
+  @font-face { font-family:'Press Start 2P'; font-style:normal; font-weight:400; font-display:swap; src:url('fonts/press-start-2p.ttf') format('truetype'); }
   :root { --pink:#ff8fc4; --hot:#ff2ea6; --ink:#4a1f46; --paper:#fff4fa; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin:0; height:100%; overflow:hidden; background:#bddff9; overscroll-behavior:none; }
   body { font-family:'Press Start 2P', ui-monospace, monospace; color:var(--ink); user-select:none; -webkit-user-select:none; }
   #stage { position:fixed; left:50%; top:0; transform:translateX(-50%); image-rendering:pixelated; image-rendering:crisp-edges; touch-action:none; cursor:default; }
+  #kujo-sprite { position:fixed; inset:0; pointer-events:none; image-rendering:pixelated; z-index:1; }
+  #toy-sprite { position:fixed; left:50%; top:0; transform:translateX(-50%); pointer-events:none; image-rendering:pixelated; z-index:2; }
+  .ov, #scrollbtn, #skip { z-index:3; }
   .ov { position:fixed; left:0; right:0; pointer-events:none; text-align:center; }
 
   /* LLAMASTE greeting */
@@ -36,7 +38,7 @@
 
   /* HUD */
   #brand { top:calc(12px + env(safe-area-inset-top)); left:14px; right:auto; text-align:left; font-size:7px; line-height:1.9; color:#fff; text-shadow:1px 1px 0 var(--ink); opacity:0; transition:opacity 1s; }
-  #credit { position:fixed; left:0; right:0; bottom:calc(5px + env(safe-area-inset-bottom)); z-index:0; text-align:center; font-size:6px; letter-spacing:.06em; color:#fff; opacity:.38; pointer-events:none; text-shadow:1px 1px 0 var(--ink); white-space:nowrap; }
+  #credit { position:fixed; left:0; right:0; bottom:calc(5px + env(safe-area-inset-bottom)); z-index:0; text-align:center; font:400 clamp(8px,2.1vw,10px)/1.4 system-ui,sans-serif; letter-spacing:.02em; color:#fff; opacity:.38; pointer-events:none; white-space:nowrap; }
   #brand b { color:#ffe566; font-weight:normal; }
   #hud { bottom:calc(20px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; transform:translateY(14px); transition:opacity .8s, transform .8s; }
   #hud.on { opacity:1; transform:none; }
@@ -120,6 +122,8 @@
   #btext sup { font:400 7px 'Press Start 2P',monospace; color:#ff2ea6; margin-right:4px; vertical-align:super; }
   .tip { font-size:7px; color:#8f2d52; text-align:center; padding:6px 10px 10px; line-height:1.8; background:#f3dcab; }
   #bvtip { margin-top:14px; font-size:7px; color:#8f2d52; line-height:1.8; }
+  .bible-link { display:inline-flex; align-items:center; min-height:44px; padding:8px 12px; color:#8f2d52; font-size:9px; line-height:1.8; }
+  .bible-link:focus-visible { outline:3px solid var(--hot); outline-offset:2px; }
   #bible button { background:#fffaf0; }
   @media (prefers-reduced-motion: reduce) { .book, #bible.shut .book { transition:opacity .15s; transform:none; } #bcard.flip, #btext.turn { animation:none; } }
   button.pop { animation:bpop .28s cubic-bezier(.2,1.8,.4,1); }
@@ -129,10 +133,12 @@
 </style>
 </head>
 <body>
-<canvas id="stage" aria-label="Kujo-sama sitting under a cherry blossom tree. Tap him to change his look."></canvas>
+<canvas id="stage" aria-label="Kujo-sama sitting cross-legged under a cherry blossom tree. Tap to change his look, hold to meditate, or drag to guide his gaze."></canvas>
+<canvas id="kujo-sprite" aria-hidden="true"></canvas>
+<canvas id="toy-sprite" aria-hidden="true"></canvas>
 <div id="hello" class="ov" role="status">LLAMASTÉ<small>PEACE · HELLO</small></div>
 <div id="haiku" class="ov" aria-live="polite"></div>
-<div id="credit">POWERED BY LOK SERVICES · DESIGNED BY G6 DESIGNS</div>
+<div id="credit">Powered by Lok Services · Designed by G6 Designs</div>
 <div id="brand" class="ov"><b>LLAMASTÉ PRODUCTIONS</b><br>EST. 1998</div>
 <button id="scrollbtn" aria-label="Scroll the world">▼</button>
 <div id="hud" class="ov">
@@ -163,6 +169,7 @@
       <div id="bcard"><p id="bvt"></p><p id="bvr"></p></div>
       <div class="btnrow" id="bread-wrap"><button id="bnew">↻ NEW VERSE</button><button id="bread">READ CHAPTER</button><button id="bcopy">COPY</button></div>
       <p id="bvtip">OPEN READ CHAPTER TO BROWSE ANY BOOK</p>
+      <p><a id="lok-bible-download" class="bible-link" href="https://gsix.online/lokbounce" target="_blank" rel="noopener noreferrer">Visit Lok Bible · downloads</a></p>
     </div>
     <div id="bchapview" hidden>
       <div class="nav">
