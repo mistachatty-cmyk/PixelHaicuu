@@ -19,6 +19,14 @@ npm run dev       # build + serve on http://localhost:5173
 npm test          # build + verify (no source maps, no service worker, no console calls, no local paths)
 ```
 
+## Lok Services drawer: REALITY, PIXEL, LOK
+A small "LOK SERVICES" tab sits at the bottom of the page; pull it up (or tap it) for the MP3 player.
+- **REALITY**: Cuu Jo's Mixverse, his real tracks from `public/tracks.json`. The main soundtrack.
+- **PIXEL**: the built-in Pixel Q Music.
+- **LOK**: the shared Lok library (ungated tracks from `https://gsix.online/lok-music-catalog.json`). It is added by inserting the Lok Services cartridge: the card flies into the slot with a burst, shockwave, shake and "+N TRACKS!", then the library loads in. Eject (tap twice) removes it again. The choice is remembered in localStorage (`hx.lok`).
+The full jukebox page lives at `/mixverse/` (`src/mixverse.*`, built by `tools/build.mjs`, list in `public/mixverse/manifest.json`).
+Audio in `public/music/` is served with CORS so other Lok apps can play it (see `vercel.json`).
+
 ## Add music
 See `public/music/README.md`. List tracks in `public/tracks.json` with optional `bpm`, `offset`, `variant`, `theme`.
 

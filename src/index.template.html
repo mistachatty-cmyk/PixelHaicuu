@@ -41,7 +41,7 @@
   #brand { top:calc(12px + env(safe-area-inset-top)); left:14px; right:auto; text-align:left; font-size:7px; line-height:1.9; color:#fff; text-shadow:1px 1px 0 var(--ink); opacity:0; transition:opacity 1s; }
   #credit { position:fixed; left:0; right:0; bottom:calc(5px + env(safe-area-inset-bottom)); z-index:0; text-align:center; font:400 clamp(8px,2.1vw,10px)/1.4 system-ui,sans-serif; letter-spacing:.02em; color:#fff; opacity:.38; pointer-events:none; white-space:nowrap; }
   #brand b { color:#ffe566; font-weight:normal; }
-  #hud { bottom:calc(20px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; transform:translateY(14px); transition:opacity .8s, transform .8s; }
+  #hud { bottom:calc(62px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; transform:translateY(14px); transition:opacity .8s, transform .8s; }
   #hud.on { opacity:1; transform:none; }
   .row { display:flex; gap:6px; align-items:center; justify-content:center; flex-wrap:wrap; pointer-events:none; }
   button { pointer-events:auto; font:inherit; font-size:9px; color:var(--ink); background:var(--paper); border:0; padding:11px 12px; min-height:40px; min-width:40px; cursor:pointer;
@@ -59,19 +59,45 @@
   #noscript { position:fixed; inset:0; display:grid; place-items:center; text-align:center; padding:24px; font-size:12px; line-height:2; }
 
 
-  /* Track sheet (Pixel Q Music + MP3s) */
-  #tracks { position:fixed; inset:0; z-index:15; display:flex; align-items:flex-end; justify-content:center; background:rgba(74,31,70,0); transition:background .3s; padding:0 10px max(10px,env(safe-area-inset-bottom)); }
+  /* Lok Services pull-up drawer: Cuu Jo's Mixverse (REALITY), Pixel Q Music (PIXEL), the shared Lok library (LOK) */
+  .dtab { position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); z-index:6; transform:translate(-50%,0); display:flex; align-items:center; gap:8px;
+    min-height:34px; padding:6px 14px 5px; background:rgba(255,244,250,.92); color:var(--ink); font-size:7px; letter-spacing:.14em; opacity:0; pointer-events:none;
+    clip-path:polygon(0 6px,6px 6px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 6px,100% 6px,100% 100%,0 100%);
+    box-shadow:none; transition:opacity .8s, transform .45s cubic-bezier(.2,1.6,.4,1); }
+  .dtab.on { opacity:.95; pointer-events:auto; }
+  .dtab.on:hover { transform:translate(-50%,-3px); opacity:1; }
+  .dtab.gone { transform:translate(-50%,160%); opacity:0; pointer-events:none; }
+  .dtab .grip { width:14px; height:4px; background:var(--ink); box-shadow:0 4px 0 var(--ink); opacity:.55; flex:none; }
+  .dtab .lbl b { color:#0f8f7e; font-weight:normal; }
+  .dtab .tq { display:flex; gap:2px; align-items:flex-end; height:10px; width:11px; flex:none; }
+  .dtab .tq i { width:3px; height:3px; background:var(--hot); }
+  .dtab.live .tq i { animation:eq .5s ease-in-out infinite alternate; }
+  .dtab.live .tq i:nth-child(2) { animation-delay:.12s; } .dtab.live .tq i:nth-child(3) { animation-delay:.24s; }
+  .dtab:focus-visible { outline:3px solid var(--hot); outline-offset:3px; }
+  #tracks { position:fixed; left:0; right:0; bottom:0; z-index:15; display:flex; justify-content:center; padding:0 10px max(10px,env(safe-area-inset-bottom)); pointer-events:none; }
   #tracks[hidden] { display:none; }
-  #tracks.open { background:rgba(74,31,70,.45); }
-  .sheet { width:min(560px,100%); max-height:78vh; display:flex; flex-direction:column; background:var(--paper); color:var(--ink); transform:translateY(110%); transition:transform .38s cubic-bezier(.2,1.25,.4,1);
-    box-shadow:0 0 0 4px var(--ink), 0 0 0 8px var(--pink), 0 0 0 12px var(--ink); margin-bottom:12px; }
-  #tracks.open .sheet { transform:none; }
-  .sheet header { display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--hot); color:#fff; box-shadow:0 4px 0 #b0126f; }
-  .sheet header .ttl { flex:1; font-size:10px; line-height:1.7; text-shadow:2px 2px 0 var(--ink); }
-  .sheet header .ttl small { display:block; font-size:7px; color:#ffe9f6; }
-  #tlist { overflow:auto; padding:10px 12px 14px; overscroll-behavior:contain; }
-  .grp { font-size:7px; letter-spacing:.12em; color:#b0126f; margin:12px 2px 8px; }
-  .trk { display:flex; align-items:center; gap:10px; width:100%; text-align:left; margin:0 0 8px; padding:10px 12px; min-height:48px; background:#fff; font-size:8px; line-height:1.7; }
+  .sheet { pointer-events:auto; width:min(540px,100%); max-height:min(70vh,560px); display:flex; flex-direction:column; background:var(--paper); color:var(--ink); transform:translateY(115%); opacity:.6;
+    transition:transform .5s cubic-bezier(.2,1.25,.4,1), opacity .25s; box-shadow:0 0 0 3px var(--ink), 0 0 0 6px var(--pink), 0 0 0 9px var(--ink), 0 14px 40px rgba(74,31,70,.45); }
+  #tracks.open .sheet { transform:none; opacity:1; }
+  .grab { display:grid; place-items:center; height:20px; background:#2a1420; cursor:grab; touch-action:none; }
+  .grab i { width:34px; height:4px; background:#5eead4; opacity:.7; box-shadow:0 4px 0 #5eead4; margin-top:-4px; }
+  .sheet header { display:flex; align-items:center; gap:10px; padding:2px 12px 10px; background:#2a1420; color:#fff; touch-action:none; }
+  .sheet header .ttl { flex:1; min-width:0; font-size:9px; letter-spacing:.14em; line-height:1.8; color:#5eead4; }
+  .sheet header .ttl small { display:block; font-size:6px; letter-spacing:.08em; color:#ffd1ea; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sheet header button { min-height:34px; min-width:34px; padding:4px 8px; font-size:8px; }
+  .seg { display:flex; gap:6px; padding:10px 12px 0; }
+  .seg button { flex:1; min-width:0; font-size:7px; line-height:1.7; padding:8px 4px; min-height:46px; text-align:center; letter-spacing:.06em; }
+  .seg button small { display:block; font-size:5px; letter-spacing:.04em; color:#8a5a86; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .np { display:flex; align-items:center; gap:8px; padding:10px 12px 4px; flex-wrap:wrap; }
+  .npt { flex:1; min-width:120px; font-size:8px; line-height:1.8; }
+  .npt small { display:block; font-size:6px; color:#8a5a86; }
+  .ctl { display:flex; gap:6px; }
+  .ctl button { min-height:40px; min-width:40px; padding:6px 10px; font-size:8px; }
+  .bar { flex-basis:100%; height:6px; background:#f3c9e2; box-shadow:0 0 0 2px var(--ink); margin:6px 2px 2px; }
+  .bar i { display:block; height:100%; width:0; background:var(--hot); }
+  #tlist { overflow:auto; padding:6px 12px 8px; overscroll-behavior:contain; min-height:0; }
+  .grp { font-size:7px; letter-spacing:.12em; color:#b0126f; margin:12px 2px 8px; line-height:1.7; }
+  .trk { display:flex; align-items:center; gap:10px; width:100%; text-align:left; margin:0 0 8px; padding:10px 12px; min-height:46px; background:#fff; font-size:8px; line-height:1.7; }
   .trk .n { color:#b0126f; width:16px; flex:none; }
   .trk .nm { flex:1; min-width:0; }
   .trk .nm small { display:block; font-size:6px; color:#8a5a86; }
@@ -82,8 +108,78 @@
   .trk.live .eq i { animation:eq .5s ease-in-out infinite alternate; }
   .trk.live .eq i:nth-child(2) { animation-delay:.12s; } .trk.live .eq i:nth-child(3) { animation-delay:.24s; }
   @keyframes eq { to { height:14px; } }
-  #tnote { font-size:7px; line-height:1.9; color:#8a5a86; padding:2px 4px 6px; }
-  @media (prefers-reduced-motion: reduce) { .sheet { transition:none; } .trk.live .eq i { animation:none; height:9px; } }
+  .tlink { display:block; margin:0 12px 6px; padding:11px 10px; text-align:center; font-size:7px; line-height:1.8; color:#fff; background:var(--hot); text-decoration:none; box-shadow:0 3px 0 #b0126f; }
+  .tfoot { padding:2px 12px 12px; text-align:center; font:400 9px/1.4 system-ui,sans-serif; color:#8a5a86; letter-spacing:.02em; }
+  [hidden] { display:none !important; }
+  .sheet header .slot { position:relative; width:108px; height:40px; flex:none; background:#12090f; box-shadow:inset 0 0 0 2px #5eead4, inset 0 7px 0 rgba(0,0,0,.65); display:grid; place-items:center; font-size:5px; line-height:1.7; letter-spacing:.12em; color:#5eead4; text-align:center; }
+  .slot.hot { animation:slothot .6s steps(6) 1; }
+  @keyframes slothot { 40% { box-shadow:inset 0 0 0 2px #fff, inset 0 7px 0 rgba(0,0,0,.2), 0 0 18px #5eead4; } }
+  .slot.full .slotlbl { display:none; }
+  .cartseat { position:absolute; inset:4px 7px 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; background:linear-gradient(135deg,#5eead4 0%,#b58cff 60%,#ff8fc4 100%); color:#2a1420; overflow:hidden; box-shadow:0 0 14px rgba(94,234,212,.55); animation:seatglow 2.6s ease-in-out infinite; }
+  .cartseat b { font-size:9px; font-weight:normal; letter-spacing:.14em; text-shadow:1px 1px 0 rgba(255,255,255,.6); }
+  .cartseat small { font-size:5px; letter-spacing:.1em; }
+  .cartseat::before { content:""; position:absolute; left:0; right:0; top:0; height:4px; background:repeating-linear-gradient(90deg,rgba(42,20,32,.55) 0 3px,transparent 3px 6px); }
+  .cartseat::after, .xcard::after { content:""; position:absolute; inset:0; background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 48%,transparent 62%); transform:translateX(-120%); animation:foil 3.4s ease-in-out infinite; pointer-events:none; }
+  @keyframes foil { 55%,100% { transform:translateX(120%); } }
+  @keyframes seatglow { 50% { box-shadow:0 0 22px rgba(94,234,212,.85); } }
+  .cartseat.seat-in { animation:seatin .7s cubic-bezier(.2,1.8,.4,1), seatglow 2.6s ease-in-out .7s infinite; }
+  @keyframes seatin { 0% { transform:translateY(-18px) scale(1.2,.8); } 40% { transform:translateY(3px) scale(1.08,.88); } 70% { transform:translateY(-2px); } 100% { transform:none; } }
+  .cartseat.eject { animation:ejectout .5s cubic-bezier(.4,0,.8,.3) forwards; }
+  @keyframes ejectout { 0% { transform:none; } 25% { transform:translateY(4px) scale(1.05,.9); } 100% { transform:translateY(-70px) rotate(-14deg) scale(.9); opacity:0; } }
+  .cardwrap { overflow:hidden; max-height:92px; padding:10px 12px 0; transition:max-height .5s cubic-bezier(.2,1.2,.4,1), padding .5s; }
+  .cardwrap.collapse { max-height:0; padding-top:0; }
+  .xcard { position:relative; display:flex; align-items:center; gap:10px; width:100%; min-height:56px; padding:10px 12px; text-align:left; color:#fff; overflow:hidden;
+    background:linear-gradient(135deg,#2a1420 0%,#3b2150 58%,#0f8f7e 135%); animation:cardbob 2.6s ease-in-out infinite; }
+  .xcard.launched { visibility:hidden; animation:none; }
+  .xcard.back { animation:cardback .6s cubic-bezier(.2,1.8,.4,1), cardbob 2.6s ease-in-out .6s infinite; }
+  @keyframes cardbob { 50% { transform:translateY(-2px); } }
+  @keyframes cardback { 0% { transform:translateY(40px) scale(.9); opacity:0; } 100% { transform:none; opacity:1; } }
+  .xcard strong { display:block; font-size:8px; font-weight:normal; letter-spacing:.12em; color:#5eead4; }
+  .xcard small { display:block; font-size:6px; letter-spacing:.06em; color:#ffd1ea; margin-top:4px; }
+  .xc-mark { display:grid; grid-template-columns:repeat(2,8px); gap:2px; flex:none; }
+  .xc-mark i { width:8px; height:8px; background:#5eead4; } .xc-mark i:nth-child(2) { background:#ff8fc4; } .xc-mark i:nth-child(3) { background:#ffe566; } .xc-mark i:nth-child(4) { background:#b58cff; }
+  .xc-text { flex:1; min-width:0; }
+  .xc-pins { display:flex; gap:3px; flex:none; } .xc-pins i { width:4px; height:16px; background:#ffd24a; box-shadow:inset 0 -4px 0 #d99a1e; }
+  .conn { display:flex; align-items:center; gap:10px; margin:10px 12px 0; padding:7px 9px; font-size:6px; letter-spacing:.08em; background:#2a1420; color:#5eead4; }
+  .conn i { flex:1; height:6px; background:rgba(94,234,212,.2); } .conn b { display:block; height:100%; width:0; background:#5eead4; }
+  .conn.run b { animation:connfill .62s steps(8) forwards; } .conn.done b { width:100%; }
+  @keyframes connfill { to { width:100%; } }
+  .trk.in { animation:rowin .42s cubic-bezier(.2,1.6,.4,1) both; animation-delay:calc(var(--i) * 55ms); }
+  @keyframes rowin { 0% { opacity:0; transform:translateX(34px) scale(.96); } 100% { opacity:1; transform:none; } }
+  .tfoot { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  #eject { min-height:34px; font-size:6px; letter-spacing:.08em; padding:6px 10px; background:#fff; }
+  #eject.sure { background:#ffe566; }
+  .ctl button svg, .sheet header button svg, #play svg { width:14px; height:14px; display:block; fill:currentColor; shape-rendering:crispEdges; }
+  #play { display:flex; align-items:center; gap:6px; font-size:8px; }
+  /* Lok burst, flight and landing effects (adapted from the Lok Expansion Pack in DJ Shoey's Arcade) */
+  #xpfx { position:fixed; inset:0; z-index:30; pointer-events:none; overflow:hidden; }
+  .xp-flyer { position:fixed; margin:0; transform-origin:center; will-change:transform; z-index:2; }
+  .xp-burst { position:fixed; width:0; height:0; }
+  .xp-p { position:absolute; left:0; top:0; width:var(--sz); height:var(--sz); margin:calc(var(--sz) / -2) 0 0 calc(var(--sz) / -2); background:var(--c); animation:xpfly .95s cubic-bezier(.1,.7,.3,1) forwards; image-rendering:pixelated; }
+  .xp-p.bit { background:none; color:var(--c); font-size:var(--sz); line-height:1; text-shadow:2px 2px 0 var(--ink); width:auto; height:auto; }
+  @keyframes xpfly { 0% { transform:translate(0,0) rotate(0) scale(1); opacity:1; } 65% { transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(1); opacity:1; } 100% { transform:translate(var(--dx),calc(var(--dy) + 44px)) rotate(var(--r)) scale(.3); opacity:0; } }
+  .xp-ring { position:absolute; left:0; top:0; width:14px; height:14px; margin:-7px 0 0 -7px; border:3px solid #fff; box-shadow:0 0 0 3px var(--hot); animation:xpring .6s steps(8) forwards; }
+  .xp-ring.big { animation-duration:.8s; border-color:#5eead4; }
+  @keyframes xpring { 0% { transform:scale(.4); opacity:1; } 100% { transform:scale(11); opacity:0; } }
+  .xp-flash { position:fixed; inset:0; background:#fff; opacity:0; animation:xpflash .38s steps(5) 1; }
+  @keyframes xpflash { 0% { opacity:0; } 20% { opacity:.65; } 100% { opacity:0; } }
+  .xp-plus { position:fixed; transform:translate(-50%,0); font-size:11px; letter-spacing:.06em; color:#ffe566; white-space:nowrap; text-shadow:3px 0 0 var(--ink),-3px 0 0 var(--ink),0 3px 0 var(--ink),0 -3px 0 var(--ink),3px 3px 0 var(--ink),-3px -3px 0 var(--ink),3px -3px 0 var(--ink),-3px 3px 0 var(--ink); animation:xpplus 1.5s cubic-bezier(.2,1.5,.4,1) forwards; }
+  @keyframes xpplus { 0% { transform:translate(-50%,16px) scale(.3); opacity:0; } 22% { transform:translate(-50%,-6px) scale(1.25); opacity:1; } 38% { transform:translate(-50%,-2px) scale(1); } 80% { transform:translate(-50%,-26px) scale(1); opacity:1; } 100% { transform:translate(-50%,-40px) scale(1); opacity:0; } }
+  .xp-click { position:fixed; transform:translate(-50%,-50%) rotate(-8deg); font-size:8px; color:#fff; background:var(--hot); padding:5px 7px; box-shadow:3px 3px 0 var(--ink); animation:xpclick .9s steps(9) forwards; }
+  @keyframes xpclick { 0% { opacity:0; transform:translate(-50%,-50%) rotate(-8deg) scale(.3); } 15% { opacity:1; transform:translate(-50%,-50%) rotate(-8deg) scale(1.3); } 30% { transform:translate(-50%,-50%) rotate(-8deg) scale(1); } 100% { opacity:0; transform:translate(-50%,-90%) rotate(-8deg) scale(1); } }
+  #stage.shake { animation:xpshake .5s steps(8) 1; }
+  @keyframes xpshake { 0%,100% { transform:translateX(-50%); } 15% { transform:translate(calc(-50% + 5px),3px); } 30% { transform:translate(calc(-50% - 5px),-3px); } 45% { transform:translate(calc(-50% + 4px),2px); } 60% { transform:translate(calc(-50% - 3px),-2px); } 80% { transform:translate(calc(-50% + 2px),1px); } }
+  .sheet.bump { animation:xpbump .45s cubic-bezier(.2,1.6,.4,1) 1; }
+  @keyframes xpbump { 0% { transform:none; } 25% { transform:translateY(6px) scale(1.01,.985); } 60% { transform:translateY(-3px); } 100% { transform:none; } }
+  @media (prefers-reduced-motion: reduce) { .xcard, .xcard::after, .cartseat, .cartseat::after, .trk.in, .xp-p, .xp-ring, .xp-flash, .xp-plus, .xp-click, #stage.shake, .sheet.bump, .conn.run b { animation:none !important; } .conn.run b { width:100%; } }
+  #fx { position:fixed; inset:0; z-index:14; pointer-events:none; opacity:0; mix-blend-mode:screen;
+    background:repeating-linear-gradient(0deg, var(--hot) 0 14px, #ffe566 14px 28px, #5eead4 28px 42px, #7a4cff 42px 56px); }
+  #fx.go { animation:fxwipe .6s steps(10) 1; }
+  @keyframes fxwipe { 0% { opacity:0; clip-path:inset(0 100% 0 0); } 35% { opacity:.7; clip-path:inset(0 0 0 0); } 100% { opacity:0; clip-path:inset(0 0 0 100%); } }
+  #stage.flip { animation:stageflip .5s steps(6) 1; }
+  @keyframes stageflip { 0% { filter:none; } 30% { filter:contrast(1.5) saturate(2) hue-rotate(40deg); } 60% { filter:contrast(1.25) saturate(1.5) hue-rotate(-30deg); } 100% { filter:none; } }
+  @media (prefers-reduced-motion: reduce) { .sheet, .dtab { transition:opacity .15s; } .trk.live .eq i, .dtab.live .tq i { animation:none; height:9px; } #fx.go, #stage.flip { animation:none; } }
+  @media (max-height:520px) and (orientation:landscape) { .sheet { max-height:86vh; } .dtab { bottom:calc(14px + env(safe-area-inset-bottom)); min-height:28px; } }
   /* Bible reader */
   #bible { position:fixed; inset:0; z-index:20; display:grid; place-items:center; padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom)); background:rgba(42,20,32,0); transition:background .35s; perspective:1100px; }
   #bible[hidden] { display:none; }
@@ -167,16 +263,42 @@
     <button id="auto" aria-label="Switch looks automatically" aria-pressed="false">AUTO</button>
   </div>
   <div class="row">
-    <button id="play" aria-label="Play music" aria-pressed="false">♪ PLAY</button>
-    <button id="songs" aria-label="Choose a song">♫ SONGS</button>
     <button id="mute" aria-label="Sound on/off" aria-pressed="false">SOUND</button>
     <button id="bibtn" aria-label="Open the Bible">✝ BIBLE</button>
   </div>
 </div>
-<div id="tracks" role="dialog" aria-modal="true" aria-label="Music" hidden>
-  <div class="sheet">
-    <header><div class="ttl">♫ MUSIC<small>PIXEL Q MUSIC · Llamasté PRODUCTIONS</small></div><button id="tprev" aria-label="Previous song">⏮</button><button id="tnext" aria-label="Next song">⏭</button><button id="tx" aria-label="Close music">✕</button></header>
+<button id="songs" class="dtab" aria-label="Open the Lok Services music player" aria-expanded="false" aria-controls="tracks"><span class="grip"></span><span class="lbl"><b>LOK</b> SERVICES</span><span class="tq" aria-hidden="true"><i></i><i></i><i></i></span></button>
+<div id="fx" aria-hidden="true"></div>
+<div id="xpfx" aria-hidden="true"></div>
+<div id="tracks" role="region" aria-label="Lok Services music player" hidden>
+  <div class="sheet" id="sheet">
+    <div class="grab" id="grab" aria-hidden="true"><i></i></div>
+    <header>
+      <div class="ttl">LOK SERVICES · MP3 PLAYER<small id="tsub">Cuu Jo's Mixverse</small></div>
+      <div class="slot" id="slot" aria-hidden="true"><span class="slotlbl">LOK<br>SLOT</span><div class="cartseat" id="cartseat" hidden><b>LOK</b><small id="seatn">+0</small></div></div>
+      <button id="tx" aria-label="Close the music player"></button>
+    </header>
+    <div class="seg" id="seg">
+      <button id="sreal" aria-pressed="false" hidden>REALITY<small>CUU JO'S MIXVERSE</small></button>
+      <button id="spix" aria-pressed="false">PIXEL<small>PIXEL Q MUSIC</small></button>
+      <button id="slok" aria-pressed="false" hidden>LOK<small>LOK LIBRARY</small></button>
+    </div>
+    <div class="cardwrap" id="cardwrap" hidden>
+      <button class="xcard" id="lokcard" aria-label="Insert the Lok Services cartridge to add the Lok library">
+        <span class="xc-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="xc-text"><strong>LOK SERVICES CARTRIDGE</strong><small id="lokcount">TAP TO INSERT</small></span>
+        <span class="xc-pins" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      </button>
+    </div>
+    <div class="conn" id="conn" hidden><span id="conntxt">CONNECTING TO LOK SERVICES</span><i><b id="connbar"></b></i></div>
+    <div class="np">
+      <div class="npt"><span id="npt">PICK A SONG</span><small id="npa"></small></div>
+      <div class="ctl"><button id="tprev" aria-label="Previous song"></button><button id="play" aria-label="Play music" aria-pressed="false"></button><button id="tnext" aria-label="Next song"></button></div>
+      <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
+    </div>
     <div id="tlist"></div>
+    <a class="tlink" id="mixlink" href="/mixverse/" target="_blank" rel="noopener" hidden>OPEN CUU JO'S MIXVERSE JUKEBOX »</a>
+    <div class="tfoot"><button id="eject" hidden>EJECT LOK SERVICES</button><span>Powered by Lok Services · Designed by G6 Designs</span></div>
   </div>
 </div>
 <div id="bible" role="dialog" aria-modal="true" aria-label="Holy Bible reader" hidden>

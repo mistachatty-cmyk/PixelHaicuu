@@ -28,6 +28,7 @@ for (const [name, vp] of [['desktop', { width: 1280, height: 720 }], ['phone', {
   await page.goto(`http://localhost:${port}/`, { waitUntil: 'domcontentloaded' });
   await page.click('#skip'); await page.waitForTimeout(3200);
   await page.click('#songs'); await page.waitForTimeout(700);
+  await page.click('#spix'); await page.waitForTimeout(400);
   const n = await page.locator('.trk').count();
   ok(name + ' sheet lists 5 Pixel Q songs (' + n + ')', n === 5);
   await page.screenshot({ path: path.join(shots, `${name}-songs-1-sheet.png`) });
@@ -46,6 +47,7 @@ for (const [name, vp] of [['desktop', { width: 1280, height: 720 }], ['phone', {
   ok(name + ' prev song works', ((await page.locator('#track').textContent()) || '').includes('Llamasté'));
   await page.click('#tx'); await page.waitForTimeout(600);
   ok(name + ' sheet closes', await page.locator('#tracks').isHidden());
+  await page.click('#songs'); await page.waitForTimeout(700);
   await page.click('#play'); await page.waitForTimeout(400);
   ok(name + ' pause button', ((await page.locator('#play').textContent()) || '').includes('PLAY'));
   await page.screenshot({ path: path.join(shots, `${name}-songs-3-paused.png`) });
