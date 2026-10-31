@@ -157,6 +157,7 @@ const tracksFor = (m) => (m === 'pixel' ? pixelQTracks() : m === 'reality' ? mp3
 const player = new MusicPlayer(synth, beat, {
   tracks: pixelQTracks(),
   onTrack: (tr) => {
+    played[mode] = true;
     $('track').textContent = tr ? '♪ ' + fmtTitle(tr.title) : '';
     syncPlayer();
     if (tr && tr.variant && VARIANTS[tr.variant]) switchLook(1, tr.variant);
@@ -230,11 +231,83 @@ function setMode(m, { silent = false, fx = true } = {}) {
   if (fx) modeFx();
   if (wasPlaying) player.play(lastIdx[m] || 0);
 }
-Object.entries(MODE_BTN).forEach(([m, id]) => { $(id).onclick = () => { synth.ensure(); setMode(m); }; });
+Object.entries(MODE_BTN).forEach(([m, id]) => { $(id).onclick = () => { synth.ensure(); setMode(m); streak = 1; }; });
+
+// ---- auto-mix + shuffle ------------------------------------------------------------------------------------------
+// AUTO-MIX: music starts on a Pixel Q song, glides into Cuu Jo's REALITY tracks, plays a couple of them, then glides back.
+// SHUFFLE: picks songs at random instead of in order (inside whichever side is playing). Both are persisted toggles.
+const MIX_RUN = { pixel: 1, reality: 2 }; // songs played on a side before the mix hands over to the other side
+const MIX_BASE = 0.75; // musicBus level (Synth default)
+let mixOn = readPreference('hx.mix', true);
+let shuffleOn = readPreference('hx.shuffle', false);
+let streak = 0; // songs played on the current side since the last hand-over
+let fadingOut = false;
+const played = { pixel: false, reality: false, lok: false }; // sides that have already had a song in this visit
+const firstOf = (side) => (shuffleOn ? Math.floor(Math.random() * tracksFor(side).length) : 0);
+const mixActive = () => mixOn && mp3.length > 0 && mode !== 'lok';
+function busFade(to, secs) {
+  const g = synth.musicBus && synth.musicBus.gain;
+  if (!g || !synth.ctx) return;
+  const t = synth.ctx.currentTime;
+  g.cancelScheduledValues(t);
+  g.setValueAtTime(g.value, t);
+  g.linearRampToValueAtTime(to, t + Math.max(0.02, secs));
+}
+function pickNext(side, cur) {
+  const n = tracksFor(side).length;
+  if (!n) return 0;
+  if (shuffleOn && n > 1) { let r; do { r = Math.floor(Math.random() * n); } while (r === cur); return r; }
+  return (cur + 1) % n;
+}
+async function mixTo(side, i, { fade = 2.4 } = {}) {
+  if (side !== mode) {
+    if (player.index >= 0) lastIdx[mode] = player.index;
+    player.pause();
+    setMode(side, { fx: false });
+    world.setTheme(MODES[side].theme);
+    streak = 0;
+  }
+  streak++;
+  fadingOut = false;
+  if (synth.ctx && fade > 0) { synth.musicBus.gain.cancelScheduledValues(synth.ctx.currentTime); synth.musicBus.gain.value = 0; }
+  await player.play(i);
+  if (fade > 0) busFade(MIX_BASE, fade); else busFade(MIX_BASE, 0.05);
+}
+function mixNext({ soft = false } = {}) {
+  const side = mode === 'pixel' && streak >= MIX_RUN.pixel ? 'reality' : mode === 'reality' && streak >= MIX_RUN.reality ? 'pixel' : mode;
+  const idx = side === mode ? pickNext(side, player.index) : played[side] ? pickNext(side, lastIdx[side]) : firstOf(side);
+  return mixTo(side, idx, { fade: soft ? 0.5 : 2.4 });
+}
+const plainNext = player.next.bind(player);
+player.next = () => {
+  if (mixActive()) return mixNext();
+  if (shuffleOn && player.tracks.length > 1) return player.play(pickNext(mode, player.index));
+  return plainNext();
+};
+// fade the end of each Reality song and the tail of each Pixel Q song so the hand-over is a smooth dip, not a cut
+setInterval(() => {
+  if (!mixActive() || !player.playing) { if (fadingOut) { fadingOut = false; busFade(MIX_BASE, 0.3); } return; }
+  const a = player.audio;
+  const left = a && isFinite(a.duration) ? a.duration - a.currentTime : player.pq.ended ? 0.6 : Infinity;
+  if (!fadingOut && left < 2.6 && left > 0.1) { fadingOut = true; busFade(0, left - 0.05); }
+}, 150);
+function syncSwitches() {
+  $('mixtgl').setAttribute('aria-checked', String(mixOn));
+  $('shuftgl').setAttribute('aria-checked', String(shuffleOn));
+  $('mixtgl').hidden = !mp3.length;
+}
+$('mixtgl').onclick = () => {
+  mixOn = !mixOn; savePreference('hx.mix', mixOn); syncSwitches(); synth.ensure(); synth.pop(); buzz(6);
+  if (mixOn) streak = 1; else { fadingOut = false; busFade(MIX_BASE, 0.3); }
+};
+$('shuftgl').onclick = () => {
+  shuffleOn = !shuffleOn; savePreference('hx.shuffle', shuffleOn); syncSwitches(); synth.ensure(); synth.pop(); buzz(6);
+};
+syncSwitches();
 
 fetch('tracks.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : [])).then((t) => {
   mp3 = Array.isArray(t) ? t.filter((x) => x && x.src && x.title) : [];
-  if (mp3.length) { $('sreal').hidden = false; setMode('reality', { silent: true }); }
+  if (mp3.length) { $('sreal').hidden = false; setMode('reality', { silent: true }); syncSwitches(); }
 }).catch(() => {});
 
 // The shared Lok library. Only ungated https tracks hosted on gsix.online; Cuu Jo's own release is skipped (it is REALITY).
@@ -431,7 +504,7 @@ function buildList() {
     const sm = document.createElement('small');
     sm.textContent = [tr.bpm ? tr.bpm + ' BPM' : '', look].filter(Boolean).join(' · ');
     b.querySelector('.nm').appendChild(sm);
-    b.onclick = () => { synth.ensure(); player.play(i); };
+    b.onclick = () => { synth.ensure(); streak = 1; fadingOut = false; busFade(MIX_BASE, 0.05); player.play(i); };
     list.appendChild(b);
   });
   markPlaying();
@@ -500,6 +573,11 @@ syncModeUI();
 
 function togglePlay() {
   synth.ensure();
+  if (!player.playing && mixActive()) {
+    fadingOut = false;
+    if (player.index < 0 && !played.pixel && !played.reality) { mixTo('pixel', firstOf('pixel'), { fade: 1.2 }); markPlaying(); return; } // the mix always opens on a Pixel Q song
+    busFade(MIX_BASE, 0.05);
+  }
   const on = player.toggle();
   if (!on) $('track').textContent = '';
   markPlaying();
@@ -601,8 +679,8 @@ $('mute').onclick = () => {
 };
 $('auto').onclick = () => setAuto(!auto);
 $('tx').onclick = closeSheet;
-$('tprev').onclick = () => { synth.ensure(); player.prev(); };
-$('tnext').onclick = () => { synth.ensure(); player.next(); };
+$('tprev').onclick = () => { synth.ensure(); fadingOut = false; busFade(MIX_BASE, 0.05); player.prev(); };
+$('tnext').onclick = () => { synth.ensure(); if (mixActive()) mixNext({ soft: true }); else player.next(); };
 $('bibtn').onclick = () => { synth.ensure(); reader.open(); };
 function applyAppearance(){
   document.body.dataset.palette=correctedColors?'corrected':'original';

@@ -24,6 +24,7 @@ A small "LOK SERVICES" tab sits at the bottom of the page; pull it up (or tap it
 - **REALITY**: Cuu Jo's Mixverse, his real tracks from `public/tracks.json`. The main soundtrack.
 - **PIXEL**: the built-in Pixel Q Music.
 - **LOK**: the shared Lok library (ungated tracks from `https://gsix.online/lok-music-catalog.json`). It is added by inserting the Lok Services cartridge: the card flies into the slot with a burst, shockwave, shake and "+N TRACKS!", then the library loads in. Eject (tap twice) removes it again. The choice is remembered in localStorage (`hx.lok`).
+- **AUTO-MIX** (on by default, `hx.mix`): the first play always opens on a Pixel Q song, glides (end-of-song fade out, fade in) into 2 Cuu Jo REALITY songs, then back to Pixel, and so on. Pressing a song or a side yourself keeps the mix going from there. **SHUFFLE** (off by default, `hx.shuffle`): next song is random instead of in order, with or without the mix. Both are switches in the drawer and remembered.
 The full jukebox page lives at `/mixverse/` (`src/mixverse.*`, built by `tools/build.mjs`, list in `public/mixverse/manifest.json`).
 Audio in `public/music/` is served with CORS so other Lok apps can play it (see `vercel.json`).
 

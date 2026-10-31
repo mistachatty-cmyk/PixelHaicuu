@@ -101,6 +101,14 @@
   .ctl button { min-height:40px; min-width:40px; padding:6px 10px; font-size:8px; }
   .bar { flex-basis:100%; height:6px; background:#f3c9e2; box-shadow:0 0 0 2px var(--ink); margin:6px 2px 2px; }
   .bar i { display:block; height:100%; width:0; background:var(--hot); }
+  .mixrow { display:flex; gap:6px; padding:6px 12px 2px; }
+  .sw { flex:1; min-width:0; display:flex; align-items:center; gap:8px; text-align:left; font-size:7px; line-height:1.7; letter-spacing:.06em; padding:7px 8px; min-height:40px; }
+  .sw span { min-width:0; } .sw small { display:block; font-size:5px; letter-spacing:.04em; color:#8a5a86; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sw i { flex:none; position:relative; width:26px; height:12px; background:#f3c9e2; box-shadow:0 0 0 2px var(--ink); transition:background .2s; }
+  .sw i::after { content:""; position:absolute; left:0; top:0; width:12px; height:12px; background:var(--ink); transition:transform .22s cubic-bezier(.2,1.6,.4,1), background .2s; }
+  .sw[aria-checked="true"] i { background:#5eead4; }
+  .sw[aria-checked="true"] i::after { transform:translateX(14px); background:var(--hot); }
+  .sw[hidden] { display:none; }
   #tlist { overflow:auto; padding:6px 12px 8px; overscroll-behavior:contain; min-height:0; }
   .grp { font-size:7px; letter-spacing:.12em; color:#b0126f; margin:12px 2px 8px; line-height:1.7; }
   .trk { display:flex; align-items:center; gap:10px; width:100%; text-align:left; margin:0 0 8px; padding:10px 12px; min-height:46px; background:#fff; font-size:8px; line-height:1.7; }
@@ -302,6 +310,10 @@
       <div class="npt"><span id="npt">PICK A SONG</span><small id="npa"></small></div>
       <div class="ctl"><button id="tprev" aria-label="Previous song"></button><button id="play" aria-label="Play music" aria-pressed="false"></button><button id="tnext" aria-label="Next song"></button></div>
       <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
+    </div>
+    <div class="mixrow" id="mixrow">
+      <button class="sw" id="mixtgl" role="switch" aria-checked="true"><i aria-hidden="true"></i><span>AUTO-MIX<small>PIXEL + REALITY</small></span></button>
+      <button class="sw" id="shuftgl" role="switch" aria-checked="false"><i aria-hidden="true"></i><span>SHUFFLE<small>RANDOM ORDER</small></span></button>
     </div>
     <div id="tlist"></div>
     <a class="tlink" id="mixlink" href="/mixverse/" target="_blank" rel="noopener" hidden>OPEN CUU JO'S MIXVERSE JUKEBOX »</a>

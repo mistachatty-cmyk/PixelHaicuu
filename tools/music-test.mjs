@@ -25,6 +25,7 @@ for (const [name, vp] of [['desktop', { width: 1280, height: 720 }], ['phone', {
   const page = await browser.newPage({ viewport: vp });
   page.on('pageerror', (e) => errors.push(name + ': ' + e.message));
   page.on('console', (m) => { if (m.type() === 'error' && !/fonts\.g|ERR_TUNNEL/.test(m.text())) errors.push(name + ' console: ' + m.text()); });
+  await page.addInitScript(() => { try { localStorage.setItem('hx.mix', 'false'); } catch (_) {} });
   await page.goto(`http://localhost:${port}/`, { waitUntil: 'domcontentloaded' });
   await page.click('#skip'); await page.waitForTimeout(3200);
   await page.click('#songs'); await page.waitForTimeout(700);
