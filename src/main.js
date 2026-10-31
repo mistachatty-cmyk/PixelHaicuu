@@ -89,9 +89,65 @@ const player = new MusicPlayer(synth, beat, {
     markPlaying();
   },
 });
+// Two soundtracks, one switch: REALITY = Cuu Jo's Mixverse (his real tracks from tracks.json, the main soundtrack)
+// and PIXEL = the built-in Pixel Q Music. The player only ever holds the list for the active side.
+const MODES = {
+  reality: { name: "CUU JO'S MIXVERSE", theme: 'night' },
+  pixel: { name: PIXELQ.name, theme: 'day' },
+};
+let mode = 'pixel';
+let mp3 = [];
+const lastIdx = { reality: 0, pixel: 0 };
+const idleLabel = () => '◉ ' + MODES[mode].name;
+function syncModeUI() {
+  const r = mode === 'reality';
+  [['mreal', 'sreal'], ['mpix', 'spix']].forEach(([a, b], i) => {
+    const on = i === 0 ? r : !r;
+    $(a).setAttribute('aria-pressed', String(on));
+    $(b).setAttribute('aria-pressed', String(on));
+  });
+  $('tsub').textContent = r ? MODES.reality.name + ' · THE MAIN SOUNDTRACK' : PIXELQ.name + ' · LLAMASTÉ PRODUCTIONS';
+  $('play').setAttribute('aria-pressed', String(player.playing));
+  $('play').textContent = player.playing ? '♪ PAUSE' : '♪ PLAY';
+  if (!player.playing) $('track').textContent = idleLabel();
+}
+function modeFx() {
+  synth.ensure();
+  synth.sparkle();
+  buzz([8, 30, 8]);
+  kujo.poke();
+  world.setTheme(MODES[mode].theme);
+  if (!reduce) {
+    const fx = $('fx');
+    fx.classList.remove('go'); void fx.offsetWidth; fx.classList.add('go');
+    canvas.classList.remove('flip'); void canvas.offsetWidth; canvas.classList.add('flip');
+  }
+}
+function setMode(m, { silent = false } = {}) {
+  if (m === mode && !silent) return;
+  const wasPlaying = player.playing;
+  if (player.index >= 0) lastIdx[mode] = player.index;
+  mode = m;
+  player.pause();
+  player.tracks = m === 'pixel' ? pixelQTracks() : mp3;
+  player.index = -1;
+  buildList();
+  syncModeUI();
+  if (silent) return;
+  modeFx();
+  if (wasPlaying) player.play(lastIdx[m] || 0);
+}
 fetch('tracks.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : [])).then((t) => {
-  if (Array.isArray(t) && t.length) { player.tracks = [...pixelQTracks(), ...t.filter((x) => x && x.src && x.title)]; buildList(); }
+  mp3 = Array.isArray(t) ? t.filter((x) => x && x.src && x.title) : [];
+  if (!mp3.length) return;
+  $('modewrap').hidden = false;
+  $('seg').hidden = false;
+  setMode('reality', { silent: true });
 }).catch(() => {});
+$('mreal').onclick = () => { synth.ensure(); setMode('reality'); };
+$('mpix').onclick = () => { synth.ensure(); setMode('pixel'); };
+$('sreal').onclick = () => { synth.ensure(); setMode('reality'); };
+$('spix').onclick = () => { synth.ensure(); setMode('pixel'); };
 
 // ---- song sheet --------------------------------------------------------------------------------------------------
 const sheet = $('tracks');
@@ -100,12 +156,12 @@ function buildList() {
   list.innerHTML = '';
   let group = null;
   player.tracks.forEach((tr, i) => {
-    const g = tr.song ? PIXELQ.name : 'YOUR TRACKS';
+    const g = tr.song ? PIXELQ.name : 'MIXVERSE';
     if (g !== group) {
       group = g;
       const h = document.createElement('div');
       h.className = 'grp';
-      h.textContent = tr.song ? PIXELQ.name + ' · LLAMASTÉ PRODUCTIONS' : 'MP3 TRACKS';
+      h.textContent = tr.song ? PIXELQ.name + ' · LLAMASTÉ PRODUCTIONS' : MODES.reality.name + ' · THE MAIN SOUNDTRACK';
       list.appendChild(h);
     }
     const b = document.createElement('button');
@@ -120,6 +176,15 @@ function buildList() {
     b.onclick = () => { synth.ensure(); player.play(i); };
     list.appendChild(b);
   });
+  if (mode === 'reality' && mp3.length) {
+    const a = document.createElement('a');
+    a.className = 'tlink';
+    a.href = '/mixverse/';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = "OPEN CUU JO'S MIXVERSE JUKEBOX ↗";
+    list.appendChild(a);
+  }
   markPlaying();
 }
 function markPlaying() {
@@ -150,7 +215,7 @@ function togglePlay() {
   markPlaying();
   $('play').setAttribute('aria-pressed', String(on));
   $('play').textContent = on ? '♪ PAUSE' : '♪ PLAY';
-  if (!on) $('track').textContent = '';
+  if (!on) $('track').textContent = idleLabel();
 }
 
 // ---- input -------------------------------------------------------------------------------------------------------

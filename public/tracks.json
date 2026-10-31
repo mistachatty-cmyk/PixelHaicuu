@@ -1,1 +1,90 @@
-[]
+[
+  {
+    "id": "rbm",
+    "title": "RBM",
+    "artist": "CUU JO",
+    "src": "music/rbm.mp3",
+    "bpm": 122.5,
+    "offset": 0.09
+  },
+  {
+    "id": "f-a-t-2",
+    "title": "F.A.T. 2",
+    "artist": "CUU JO",
+    "src": "music/f-a-t-2.mp3",
+    "bpm": 75.5,
+    "offset": 0.57
+  },
+  {
+    "id": "believe-me-now",
+    "title": "BELIEVE ME NOW",
+    "artist": "CUU JO",
+    "src": "music/believe-me-now.mp3",
+    "bpm": 160.5,
+    "offset": 0.01
+  },
+  {
+    "id": "bend",
+    "title": "BEND",
+    "artist": "CUU JO",
+    "src": "music/bend.mp3",
+    "bpm": 117,
+    "offset": 0.19
+  },
+  {
+    "id": "itns",
+    "title": "ITNS",
+    "artist": "CUU JO",
+    "src": "music/itns.mp3",
+    "bpm": 80,
+    "offset": 0.4
+  },
+  {
+    "id": "momas-boy",
+    "title": "MOMAS BOY",
+    "artist": "CUU JO",
+    "src": "music/momas-boy.mp3",
+    "bpm": 122.5,
+    "offset": 0.37
+  },
+  {
+    "id": "platonic",
+    "title": "PLATONIC",
+    "artist": "CUU JO",
+    "src": "music/platonic.mp3",
+    "bpm": 93,
+    "offset": 0.05
+  },
+  {
+    "id": "big-boys-don-t-cry",
+    "title": "BIG BOYS DON'T CRY",
+    "artist": "CUU JO",
+    "src": "music/big-boys-don-t-cry.mp3",
+    "bpm": 171,
+    "offset": 0.23
+  },
+  {
+    "id": "the-guy",
+    "title": "THE GUY",
+    "artist": "CUU JO",
+    "src": "music/the-guy.mp3",
+    "bpm": 101,
+    "offset": 0.12
+  },
+  {
+    "id": "csws",
+    "title": "CSWS",
+    "artist": "CUU JO",
+    "src": "music/csws.mp3",
+    "bpm": 91,
+    "offset": 0.35
+  },
+  {
+    "id": "where-i-wanna-be",
+    "title": "WHERE I WANNA BE",
+    "artist": "CUU JO",
+    "src": "music/where-i-wanna-be.mp3",
+    "bpm": 122.5,
+    "offset": 0.08
+  }
+]
