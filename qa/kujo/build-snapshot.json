@@ -1,6 +1,6 @@
 {
-  "verifiedAt": "2026-10-31T19:57:05.165Z",
-  "builtHtmlSha256": "cf7c1aa1372a6b130ae64cbd801b57725cae7498e1f615cfa6706f3850162de3",
+  "verifiedAt": "2026-10-31T20:30:47.528971+00:00",
+  "builtHtmlSha256": "9716829d98525073c73dbe846b268a1a146bdd08b953041e20fe677d891ef288",
   "shippingManifests": {
     "classic": "e7bfc8793af2f46ceab6a4fc3a76c1b3566e6c6a0e598f06ac2e3361a8a863c9",
     "artist": "a3501d1c532b4b9e670cf5103ae1e908c5d0f27827a3635ad34547d6cb7af30e",
@@ -16,7 +16,7 @@
     "browserViewports": 4,
     "looksPerViewport": 7,
     "browserErrors": 0,
-    "libraryBehaviorTests": 12,
+    "libraryBehaviorTests": 15,
     "artPaletteRoles": 9,
     "skinnedModels": 7,
     "modelJoints": 23,
@@ -27,8 +27,13 @@
       256
     ],
     "stripFrames": 4,
-    "modelClippingFailures": 0
+    "modelClippingFailures": 0,
+    "libraryHarnesses": 3,
+    "worldGestureJourney": "passed"
   },
   "deployed": false,
-  "pushed": false
+  "pushedImplementationCheckpoints": {
+    "library": "5ad8448",
+    "page": "69df77a"
+  }
 }

@@ -1,0 +1,20 @@
+{
+  "testedAt": "2026-10-31T20:27:51.331Z",
+  "reports": [
+    {
+      "harness": "index.html",
+      "errors": [],
+      "failed": []
+    },
+    {
+      "harness": "world.html?theme=night",
+      "errors": [],
+      "failed": []
+    },
+    {
+      "harness": "rig-gallery.html",
+      "errors": [],
+      "failed": []
+    }
+  ]
+}

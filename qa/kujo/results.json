@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-31T19:51:21.851Z",
+  "testedAt": "2026-10-31T20:30:06.926Z",
   "story": "HaiCuu loads the registered character layers, renders seven looks, reacts to input and music, and opens the Lok Bible reader without a backend.",
   "reports": [
     {
