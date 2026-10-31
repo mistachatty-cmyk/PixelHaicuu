@@ -24,6 +24,7 @@ const particles = new Particles(kit);
 const beat = new BeatEngine();
 const synth = new Synth();
 const world = new SakuraWorld({ stage, kit, particles, theme: VARIANTS[VARIANT_ORDER[0]].theme });
+world.calm = reduce; // reduced motion: no beat-driven petal bursts
 const kujo = new Kujo({ kit, particles, beat });
 world.attachKujo(kujo);
 const spriteCanvas = $('kujo-sprite');
@@ -66,7 +67,7 @@ function resetGaze() { gazeTarget = [0, 0]; kujo.sprite?.setGaze(0, 0); }
 applySprite().then(() => { for (const id of VARIANT_ORDER) if (id !== kujo.id) loadLook(id); });
 beat.on((info) => world.onBeat(info));
 // the world tells us about its little events (cardinal, wishes, planted flowers): give them sound and a tiny buzz
-const soundFor = { plant: () => synth.pop(), catch: () => synth.sparkle(), chirp: () => synth.chirp(), cardinal: () => synth.chirp(), wish: () => synth.chime(), firefly: () => synth.boop(), shake: () => synth.boop(), pluck: () => { synth.sparkle(); buzz(5); }, pet: () => synth.boop() };
+const soundFor = { plant: () => synth.pop(), catch: () => synth.sparkle(), chirp: () => synth.chirp(), cardinal: () => synth.chirp(), wish: () => synth.chime(), firefly: () => synth.boop(), shake: () => synth.boop(), pluck: () => { synth.sparkle(); buzz(5); }, pet: () => synth.boop(), pull: () => synth.tick(300) };
 
 // ---- feel helpers ------------------------------------------------------------------------------------------------
 world.onEvent = (name) => { synth.ensure(); const f = soundFor[name]; if (f) f(); };
@@ -133,7 +134,7 @@ function setAuto(on) {
 const player = new MusicPlayer(synth, beat, {
   tracks: pixelQTracks(),
   onTrack: (tr) => {
-    $('track').textContent = tr ? '♪ ' + (tr.title || '').toUpperCase() : '';
+    $('track').textContent = tr ? '♪ ' + (tr.title || '').toUpperCase().replaceAll('LLAMASTÉ', 'Llamasté') : '';
     $('play').setAttribute('aria-pressed', String(player.playing));
     $('play').textContent = player.playing ? '♪ PAUSE' : '♪ PLAY';
     if (tr && tr.variant && VARIANTS[tr.variant]) switchLook(1, tr.variant);
@@ -160,7 +161,7 @@ function buildList() {
       group = g;
       const h = document.createElement('div');
       h.className = 'grp';
-      h.textContent = tr.song ? PIXELQ.name + ' · LLAMASTÉ PRODUCTIONS' : 'MP3 TRACKS';
+      h.textContent = tr.song ? PIXELQ.name + ' · Llamasté Productions' : 'MP3 TRACKS';
       list.appendChild(h);
     }
     const b = document.createElement('button');
@@ -168,7 +169,7 @@ function buildList() {
     b.dataset.i = i;
     const look = tr.variant && VARIANTS[tr.variant] ? lookName(VARIANTS[tr.variant]) : '';
     b.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="nm"></span><span class="eq"><i></i><i></i><i></i></span>';
-    b.querySelector('.nm').textContent = (tr.title || '').toUpperCase();
+    b.querySelector('.nm').textContent = (tr.title || '').toUpperCase().replaceAll('LLAMASTÉ', 'Llamasté');
     const sm = document.createElement('small');
     sm.textContent = [tr.bpm ? tr.bpm + ' BPM' : '', look].filter(Boolean).join(' · ');
     b.querySelector('.nm').appendChild(sm);
@@ -275,6 +276,7 @@ attachPointer(stage, {
     const [wx, wy] = world.toWorld(sx, sy);
     if (world.gust(wx, wy, dx * 2, dy * 2, 40) && Math.random() < 0.25) particles.stars(wx, wy, 1, 3, 20);
     world.plant(wx, wy, true);
+    world.pull(wx, wy);
   },
   onTap: (sx, sy) => {
     if (!ready) return;
@@ -351,6 +353,7 @@ function frame(now) {
   if (document.hidden) { requestAnimationFrame(frame); return; }
   beat.update(dt);
   player.update();
+  world.calm = reduce;
   world.reducedMotion = reduce;
   world.update(dt);
   kujo.update(dt);

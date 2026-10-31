@@ -1,6 +1,8 @@
 # HaiCuu candidate · Kujo layers and interactions
 
-Branch: `chatgpt/kujo-page`, built on Claude's `kujo-v2` with `handoff-docs` merged into this feature branch. The owner authorized checkpoint pushes to working branches; no merge to `main` or deployment is authorized.
+Branch: `chatgpt/kujo-page`, built on Claude's `kujo-v2` with `handoff-docs` and his latest `claude/page-polish` merged into this feature branch. The owner authorized checkpoint pushes to working branches; no merge to `main` or deployment is authorized. Remote recovery checkpoints: library `921bcf3`, page `362f5da`.
+
+Claude's latest commits (`7ee092b` in the library, `d07e144` in the page) supply WOFF2 fonts, favicon, Bible link, landscape layout, drag-through petal pulling, llama reactions and calm mode. The merge preserves these alongside the illustrated rig and claimed touch gestures. Shared beat delivery retains his 150ms stale cutoff and emits only the latest audible beat.
 
 ## Current behavior
 

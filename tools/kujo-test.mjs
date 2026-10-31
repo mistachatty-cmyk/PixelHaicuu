@@ -34,7 +34,7 @@ try{
   await page.mouse.move(cx,cy);await page.mouse.down();await page.waitForTimeout(850);await page.screenshot({path:path.join(out,name+'-om.png')});await page.mouse.up();assert.equal(await page.locator('#look').innerText(),before,'Hold must not change look');
   await page.click('#bibtn');await page.waitForFunction(()=>document.querySelector('#bvt').textContent.length>20);assert.equal(await page.locator('#lok-bible-download').getAttribute('href'),'https://gsix.online/lokbounce');
   await page.locator('#lok-bible-download').focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.id),'bx','Reader focus wraps');
-  await page.screenshot({path:path.join(out,name+'-reader.png')});await page.keyboard.press('Escape');await page.waitForTimeout(450);
+  await page.waitForTimeout(450);await page.screenshot({path:path.join(out,name+'-reader.png')});await page.keyboard.press('Escape');await page.waitForTimeout(450);
   await page.click('#songs');await page.locator('.trk').nth(2).click();await page.waitForTimeout(700);assert.equal(await page.locator('#look').innerText(),'MAROON MASK');await page.screenshot({path:path.join(out,name+'-music.png')});await page.click('#tx');await page.waitForTimeout(450);
   const credit=await page.locator('#credit').boundingBox(),hud=await page.locator('#hud').boundingBox();assert.ok(credit.y>=hud.y+hud.height,'Credit must be below controls');
   assert.deepEqual(errors,[],name+' browser errors');assert.deepEqual(failed,[],name+' failed assets');assert.deepEqual(remote,[],name+' unexpected external request');

@@ -14,7 +14,7 @@ const server = http.createServer((q, r) => {
   let p = path.join(dist, q.url.split('?')[0]);
   if (fs.existsSync(p) && fs.statSync(p).isDirectory()) p = path.join(p, 'index.html');
   if (!fs.existsSync(p)) { r.writeHead(404); return r.end(); }
-  r.writeHead(200, { 'content-type': ({'.json':'application/json','.png':'image/png','.webp':'image/webp','.ttf':'font/ttf','.html':'text/html'})[path.extname(p)] || 'application/octet-stream' });
+  r.writeHead(200, { 'content-type': ({'.json':'application/json','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2','.ttf':'font/ttf','.html':'text/html'})[path.extname(p)] || 'application/octet-stream' });
   fs.createReadStream(p).pipe(r);
 }).listen(0);
 const port = server.address().port;
@@ -31,7 +31,7 @@ for (const [name, vp] of [['desktop', { width: 1280, height: 720 }], ['phone', {
   const n = await page.locator('.trk').count();
   ok(name + ' sheet lists 5 Pixel Q songs (' + n + ')', n === 5);
   await page.screenshot({ path: path.join(shots, `${name}-songs-1-sheet.png`) });
-  const wanted = [['SAKURA HOUR', 'PINK MASK'], ['DREADLOCK DRIFT', 'MAROON MASK'], ['ALPACA AFTERNOON', 'Llamasté'], ['OM AT MIDNIGHT', 'ARTIST'], ['LLAMASTÉ LO-FI', 'PINK DREADS']];
+  const wanted = [['SAKURA HOUR', 'PINK MASK'], ['DREADLOCK DRIFT', 'MAROON MASK'], ['ALPACA AFTERNOON', 'Llamasté'], ['OM AT MIDNIGHT', 'ARTIST'], ['Llamasté LO-FI', 'PINK DREADS']];
   const idx = [1, 2, 3, 4, 0];
   for (let k = 0; k < idx.length; k++) {
     await page.locator('.trk').nth(idx[k]).click(); await page.waitForTimeout(1500);
@@ -43,7 +43,7 @@ for (const [name, vp] of [['desktop', { width: 1280, height: 720 }], ['phone', {
   await page.click('#tnext'); await page.waitForTimeout(700);
   ok(name + ' next song works', ((await page.locator('#track').textContent()) || '').includes('SAKURA'));
   await page.click('#tprev'); await page.waitForTimeout(500);
-  ok(name + ' prev song works', ((await page.locator('#track').textContent()) || '').includes('LLAMAST'));
+  ok(name + ' prev song works', ((await page.locator('#track').textContent()) || '').includes('Llamasté'));
   await page.click('#tx'); await page.waitForTimeout(600);
   ok(name + ' sheet closes', await page.locator('#tracks').isHidden());
   await page.click('#play'); await page.waitForTimeout(400);
