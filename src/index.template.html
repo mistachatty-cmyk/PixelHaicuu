@@ -36,8 +36,9 @@
 
   /* HUD */
   #brand { top:calc(12px + env(safe-area-inset-top)); left:14px; right:auto; text-align:left; font-size:7px; line-height:1.9; color:#fff; text-shadow:1px 1px 0 var(--ink); opacity:0; transition:opacity 1s; }
+  #credit { position:fixed; left:0; right:0; bottom:calc(5px + env(safe-area-inset-bottom)); z-index:0; text-align:center; font-size:6px; letter-spacing:.06em; color:#fff; opacity:.38; pointer-events:none; text-shadow:1px 1px 0 var(--ink); white-space:nowrap; }
   #brand b { color:#ffe566; font-weight:normal; }
-  #hud { bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; transform:translateY(14px); transition:opacity .8s, transform .8s; }
+  #hud { bottom:calc(20px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; transform:translateY(14px); transition:opacity .8s, transform .8s; }
   #hud.on { opacity:1; transform:none; }
   .row { display:flex; gap:6px; align-items:center; justify-content:center; flex-wrap:wrap; pointer-events:none; }
   button { pointer-events:auto; font:inherit; font-size:9px; color:var(--ink); background:var(--paper); border:0; padding:11px 12px; min-height:40px; min-width:40px; cursor:pointer;
@@ -131,6 +132,7 @@
 <canvas id="stage" aria-label="Kujo-sama sitting under a cherry blossom tree. Tap him to change his look."></canvas>
 <div id="hello" class="ov" role="status">LLAMASTÉ<small>PEACE · HELLO</small></div>
 <div id="haiku" class="ov" aria-live="polite"></div>
+<div id="credit">POWERED BY LOK SERVICES · DESIGNED BY G6 DESIGNS</div>
 <div id="brand" class="ov"><b>LLAMASTÉ PRODUCTIONS</b><br>EST. 1998</div>
 <button id="scrollbtn" aria-label="Scroll the world">▼</button>
 <div id="hud" class="ov">

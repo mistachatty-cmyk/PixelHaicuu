@@ -24,8 +24,11 @@ const world = new SakuraWorld({ stage, kit, particles, theme: VARIANTS[VARIANT_O
 const kujo = new Kujo({ kit, particles, beat });
 world.attachKujo(kujo);
 beat.on((info) => world.onBeat(info));
+// the world tells us about its little events (cardinal, wishes, planted flowers): give them sound and a tiny buzz
+const soundFor = { plant: () => synth.pop(), catch: () => synth.sparkle(), chirp: () => synth.chirp(), cardinal: () => synth.chirp(), wish: () => synth.chime(), firefly: () => synth.boop(), shake: () => synth.boop() };
 
 // ---- feel helpers ------------------------------------------------------------------------------------------------
+world.onEvent = (name) => { synth.ensure(); const f = soundFor[name]; if (f) f(); };
 const buzz = (ms) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (_) { /* unsupported */ } };
 
 // ---- Bible: a pixel Bible bounces around the screen (grab/fling it, tap to read) -----------------------------
@@ -176,6 +179,7 @@ attachPointer(stage, {
     if (!ready) return;
     const [wx, wy] = world.toWorld(sx, sy);
     if (world.gust(wx, wy, dx * 2, dy * 2, 40) && Math.random() < 0.25) particles.stars(wx, wy, 1, 3, 20);
+    world.plant(wx, wy, true);
   },
   onTap: (sx, sy) => {
     if (!ready) return;
