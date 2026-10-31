@@ -1,10 +1,11 @@
 // The HaiCuu Experience - Kujo-sama page. Wires the Lok Pixel Library (vendored in ../lib) to the DOM:
 // intro (LLAMASTE -> petals -> title -> camera glides down to Kujo), interaction, music and the HUD.
 import {
-  createStage, SakuraWorld, Kujo, Particles, BeatEngine, makeKit, Synth, MusicPlayer,
+  createStage, SakuraWorld, Kujo, Particles, BeatEngine, makeKit, Synth, MusicPlayer, BibleBounce,
   attachPointer, revealWords, sleep, VARIANTS, VARIANT_ORDER,
 } from '../lib/index.js';
 import { HAIKUS } from './haikus.js';
+import { BibleReader } from './reader.js';
 
 const $ = (id) => document.getElementById(id);
 const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -23,6 +24,31 @@ const world = new SakuraWorld({ stage, kit, particles, theme: VARIANTS[VARIANT_O
 const kujo = new Kujo({ kit, particles, beat });
 world.attachKujo(kujo);
 beat.on((info) => world.onBeat(info));
+
+// ---- feel helpers ------------------------------------------------------------------------------------------------
+const buzz = (ms) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (_) { /* unsupported */ } };
+
+// ---- Bible: a pixel Bible bounces around the screen (grab/fling it, tap to read) -----------------------------
+const reader = new BibleReader({
+  sfx: (n, a) => { synth.ensure(); if (typeof synth[n] === 'function') synth[n](a); },
+  buzz,
+  onOpen: () => { bible.hide(); },
+  onClose: () => { bible.popBack(); },
+});
+const bible = new BibleBounce({
+  stage, kit,
+  onOpen: () => { synth.ensure(); reader.open(); },
+  onGrab: () => { synth.ensure(); synth.grab(); buzz(6); },
+  onFling: (sp) => { synth.fling(sp); buzz(10); },
+  onBounce: (sp) => { synth.tok(sp); if (sp > 90) buzz(4); },
+  onCorner: () => { synth.chime(); buzz([8, 30, 8]); },
+});
+function fitBible() {
+  const hud = $('hud');
+  const hh = hud && hud.offsetHeight ? hud.offsetHeight + 18 : 110;
+  bible.setBounds(Math.ceil(46 / stage.scale), stage.h - Math.ceil(hh / stage.scale));
+}
+stage.onResize.push(fitBible);
 
 let resizeQueued = false;
 window.addEventListener('resize', () => {
@@ -72,11 +98,31 @@ function togglePlay() {
 // ---- input -------------------------------------------------------------------------------------------------------
 let ready = false; // true once the intro has handed control over
 window.addEventListener('pointerdown', () => synth.ensure(), { once: true });
+// every button gets a click sound, a pop and a little buzz
+document.addEventListener('pointerdown', (e) => {
+  const b = e.target.closest && e.target.closest('button');
+  if (!b || b.id === 'bnew' || b.id === 'bprev' || b.id === 'bnext' || b.id === 'bmode' || b.id === 'bread') return;
+  synth.ensure();
+  if (b.id !== 'look' && b.id !== 'prev' && b.id !== 'next') synth.pop();
+  buzz(5);
+  b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+});
 
+let lastTap = [0, 0];
 attachPointer(stage, {
+  enabled: () => !reader.isOpen,
+  onDown: (sx, sy) => (ready ? bible.pointerDown(sx, sy) : false),
+  onClaimMove: (sx, sy) => bible.pointerMove(sx, sy),
+  onClaimUp: () => bible.pointerUp(),
+  onDragXY: ([sx, sy], dx, dy) => {
+    if (!ready) return;
+    const [wx, wy] = world.toWorld(sx, sy);
+    if (world.gust(wx, wy, dx * 2, dy * 2, 40) && Math.random() < 0.25) particles.stars(wx, wy, 1, 3, 20);
+  },
   onTap: (sx, sy) => {
     if (!ready) return;
     const [wx, wy] = world.toWorld(sx, sy);
+    lastTap = [wx, wy];
     if (kujo.hit(wx, wy)) {
       kujo.poke();
       synth.poke();
@@ -87,6 +133,8 @@ attachPointer(stage, {
     if (hit === 'sun' || hit === 'title') synth.sparkle();
     else if (hit === 'alpaca' || hit === 'flower') synth.boop();
     else if (hit) synth.pop();
+    if (!hit || hit === 'ground') { particles.stars(wx, wy, 3, 4, 30); world.gust(wx, wy, 0, -6, 34); }
+    buzz(hit ? 8 : 4);
   },
   onHold: (sx, sy, on) => {
     if (!ready) return;
@@ -117,6 +165,16 @@ $('mute').onclick = () => {
   $('mute').textContent = synth.muted ? 'MUTED' : 'SOUND';
 };
 $('auto').onclick = () => setAuto(!auto);
+$('bibtn').onclick = () => { synth.ensure(); reader.open(); };
+// hover feedback: pointer cursor over anything touchable
+canvas.addEventListener('pointermove', (e) => {
+  if (!ready || reader.isOpen || e.pointerType === 'touch') return;
+  const [sx, sy] = stage.toStage(e.clientX, e.clientY);
+  const onBible = bible.hit(sx, sy);
+  bible.setHover(onBible);
+  const [wx, wy] = world.toWorld(sx, sy);
+  canvas.style.cursor = onBible ? 'grab' : kujo.hit(wx, wy) ? 'pointer' : 'default';
+});
 $('scrollbtn').onclick = () => world.goTo(world.progress > 0.5 ? 'top' : 'bottom');
 
 // ---- main loop ---------------------------------------------------------------------------------------------------
@@ -132,6 +190,8 @@ function frame(now) {
   particles.update(dt);
   stage.ctx.imageSmoothingEnabled = false;
   world.draw(stage.ctx);
+  bible.update(dt);
+  bible.draw(stage.ctx);
   const a = world.progress > 0.5 ? '▲' : '▼';
   if (a !== arrow) { arrow = a; $('scrollbtn').textContent = a; }
   haikuEl.classList.toggle('on', haikuWanted && world.progress > 0.55);
@@ -169,6 +229,8 @@ function arrive() {
   $('scrollbtn').classList.add('on');
   world.showSign(true);
   showLook();
+  fitBible();
+  setTimeout(() => { bible.spawn(); synth.pop(); }, 900);
   kujo.expr = 'happy';
   kujo.exprT = 1.4;
   particles.hearts(kujo.x, kujo.y - 66, 5, 12);

@@ -15,7 +15,7 @@
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin:0; height:100%; overflow:hidden; background:#bddff9; overscroll-behavior:none; }
   body { font-family:'Press Start 2P', ui-monospace, monospace; color:var(--ink); user-select:none; -webkit-user-select:none; }
-  #stage { position:fixed; left:50%; top:0; transform:translateX(-50%); image-rendering:pixelated; image-rendering:crisp-edges; touch-action:none; cursor:pointer; }
+  #stage { position:fixed; left:50%; top:0; transform:translateX(-50%); image-rendering:pixelated; image-rendering:crisp-edges; touch-action:none; cursor:default; }
   .ov { position:fixed; left:0; right:0; pointer-events:none; text-align:center; }
 
   /* LLAMASTE greeting */
@@ -53,6 +53,51 @@
   #skip { position:fixed; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); font-size:7px; opacity:.85; }
   #skip.gone { display:none; }
   #noscript { position:fixed; inset:0; display:grid; place-items:center; text-align:center; padding:24px; font-size:12px; line-height:2; }
+
+  /* Bible reader */
+  #bible { position:fixed; inset:0; z-index:20; display:grid; place-items:center; padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom)); background:rgba(42,20,32,0); transition:background .35s; perspective:1100px; }
+  #bible[hidden] { display:none; }
+  #bible.open { background:rgba(42,20,32,.62); }
+  .book { width:min(640px,100%); max-height:100%; display:flex; flex-direction:column; background:#fff1d0; color:#3a2228; position:relative;
+    box-shadow:0 0 0 4px #2a1420, 0 0 0 8px #8f2d52, 0 0 0 12px #2a1420, 12px 14px 0 12px rgba(0,0,0,.28);
+    transform-origin:left center; transform:rotateY(-80deg) scale(.4); opacity:0; transition:transform .42s cubic-bezier(.2,1.25,.4,1), opacity .25s; }
+  #bible.open .book { transform:none; opacity:1; }
+  #bible.shut .book { transform:rotateY(-80deg) scale(.4); opacity:0; transition:transform .3s ease-in, opacity .3s; }
+  .book header { display:flex; align-items:center; gap:10px; padding:12px 14px; background:#8f2d52; color:#ffd24a; box-shadow:0 4px 0 #6b1f3a; }
+  .book header .ttl { flex:1; font-size:10px; line-height:1.6; text-shadow:2px 2px 0 #2a1420; }
+  .book header .ttl small { color:#ffe9b0; font-size:7px; display:block; }
+  #bx { background:#fff1d0; }
+  #bverse { padding:22px 18px 18px; overflow:auto; text-align:center; }
+  #bcard { padding:20px 14px 16px; background:#fffaf0; box-shadow:0 0 0 3px #d99a1e inset, 0 0 0 5px #fffaf0 inset, 0 0 0 7px #d99a1e inset; }
+  #bcard.flip { animation:flip .45s cubic-bezier(.2,1.5,.4,1); }
+  @keyframes flip { 0% { transform:rotateX(80deg) scale(.9); opacity:0; } 100% { transform:none; opacity:1; } }
+  #bvt { font:400 1em/1.65 Georgia,'Times New Roman',serif; font-size:clamp(17px,4.4vw,22px); margin:8px 6px 14px; }
+  #bvr { font-size:9px; color:#8f2d52; line-height:1.8; margin:0; }
+  .btnrow { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+  #bverse[hidden], #bchapview[hidden] { display:none; }
+  #bchapview { display:flex; flex-direction:column; min-height:0; flex:1; }
+  .nav { display:flex; gap:6px; padding:10px 12px; align-items:center; flex-wrap:wrap; background:#f3dcab; }
+  .nav select { font:inherit; font-size:9px; min-height:40px; padding:6px 8px; color:#3a2228; background:#fff1d0; border:3px solid #2a1420; flex:1; min-width:0; max-width:240px; }
+  .nav select#bchap { flex:0 0 auto; max-width:90px; }
+  .nav .sp { flex:1; }
+  .nav button:disabled { opacity:.35; cursor:default; }
+  #btext { overflow:auto; padding:14px 16px 28px; font:400 17px/1.75 Georgia,'Times New Roman',serif; flex:1; min-height:0; -webkit-overflow-scrolling:touch; user-select:text; -webkit-user-select:text; overscroll-behavior:contain; }
+  #btext.turn { animation:turn .3s ease-out; }
+  @keyframes turn { from { opacity:0; transform:translateX(14px); } to { opacity:1; transform:none; } }
+  #btext h2 { font:400 12px/1.7 'Press Start 2P',monospace; color:#8f2d52; margin:0 0 12px; text-align:center; }
+  #btext .v { cursor:pointer; border-radius:2px; transition:background .2s; padding:1px 0; }
+  #btext .v:hover { background:rgba(255,210,74,.28); }
+  #btext .v.hl { background:#ffe36b; box-shadow:0 2px 0 #d99a1e; }
+  #btext .v.pop { animation:vpop .35s cubic-bezier(.2,1.8,.4,1); }
+  @keyframes vpop { 0% { transform:scale(.96); } 50% { transform:scale(1.03); } 100% { transform:none; } }
+  #btext sup { font:400 7px 'Press Start 2P',monospace; color:#ff2ea6; margin-right:4px; vertical-align:super; }
+  .tip { font-size:7px; color:#8f2d52; text-align:center; padding:6px 10px 10px; line-height:1.8; background:#f3dcab; }
+  #bvtip { margin-top:14px; font-size:7px; color:#8f2d52; line-height:1.8; }
+  #bible button { background:#fffaf0; }
+  @media (prefers-reduced-motion: reduce) { .book, #bible.shut .book { transition:opacity .15s; transform:none; } #bcard.flip, #btext.turn { animation:none; } }
+  button.pop { animation:bpop .28s cubic-bezier(.2,1.8,.4,1); }
+  @keyframes bpop { 0% { transform:scale(.88); } 60% { transform:scale(1.07); } 100% { transform:none; } }
+  @media (hover:hover) { button:hover { transform:translateY(-1px); filter:brightness(1.06); } button:active { transform:translateY(2px); } }
   @media (prefers-reduced-motion: reduce) { #hello, #hello.show, #hello.slide, .w { transition-duration:.01s; } #scrollbtn.on { animation:none; } }
 </style>
 </head>
@@ -73,6 +118,28 @@
     <button id="play" aria-label="Play music" aria-pressed="false">♪ PLAY</button>
     <button id="mute" aria-label="Sound on/off" aria-pressed="false">SOUND</button>
     <button id="auto" aria-label="Switch looks automatically" aria-pressed="false">AUTO</button>
+    <button id="bibtn" aria-label="Open the Bible">✝ BIBLE</button>
+  </div>
+</div>
+<div id="bible" role="dialog" aria-modal="true" aria-label="Holy Bible reader" hidden>
+  <div class="book">
+    <header><div class="ttl">HOLY BIBLE<small>KING JAMES VERSION</small></div><button id="bx" aria-label="Close Bible">✕</button></header>
+    <div id="bverse">
+      <div id="bcard"><p id="bvt"></p><p id="bvr"></p></div>
+      <div class="btnrow" id="bread-wrap"><button id="bnew">↻ NEW VERSE</button><button id="bread">READ CHAPTER</button><button id="bcopy">COPY</button></div>
+      <p id="bvtip">OPEN READ CHAPTER TO BROWSE ANY BOOK</p>
+    </div>
+    <div id="bchapview" hidden>
+      <div class="nav">
+        <button id="bprev" aria-label="Previous chapter">◀</button>
+        <select id="bbook" aria-label="Book"></select>
+        <select id="bchap" aria-label="Chapter"></select>
+        <button id="bnext" aria-label="Next chapter">▶</button>
+        <button id="bmode" aria-label="Back to a verse">✦</button>
+      </div>
+      <div id="btext" tabindex="0"></div>
+      <div class="tip">TAP A VERSE TO HIGHLIGHT · ← → TURN PAGES · ESC CLOSES</div>
+    </div>
   </div>
 </div>
 <button id="skip" aria-label="Skip intro">SKIP ▶▶</button>
