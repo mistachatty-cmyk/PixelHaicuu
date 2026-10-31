@@ -1,6 +1,6 @@
 {
   "name": "pixelhaicuu",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Kujo-sama (the Dalai Llama) - The HaiCuu Experience pixel page. Built on the Lok Pixel Library.",
   "type": "module",
@@ -9,7 +9,8 @@
     "build": "node tools/build.mjs",
     "verify": "node tools/verify-dist.mjs",
     "serve": "node tools/serve.mjs",
-    "test": "npm run build && npm run verify",
+    "test": "npm run build && npm run verify && node tools/verify-kujo.mjs",
+    "test:mix": "node tools/mix-test.mjs",
     "dev": "npm run build && npm run serve"
   },
   "devDependencies": {

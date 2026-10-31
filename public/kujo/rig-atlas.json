@@ -1,0 +1,488 @@
+{
+  "v": 1,
+  "source": "kujo-rig.blend",
+  "cell": [
+    256,
+    256
+  ],
+  "frames": 4,
+  "baseline": 242,
+  "looks": {
+    "classic": {
+      "idle": {
+        "src": "classic/strips/idle.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_idle"
+      },
+      "nod": {
+        "src": "classic/strips/nod.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_nod"
+      },
+      "om": {
+        "src": "classic/strips/om.webp",
+        "frames": 4,
+        "fps": 1,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_om"
+      },
+      "laugh": {
+        "src": "classic/strips/laugh.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_laugh"
+      },
+      "shock": {
+        "src": "classic/strips/shock.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": false,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_shock"
+      },
+      "walk": {
+        "src": "classic/strips/walk.webp",
+        "frames": 4,
+        "fps": 5,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_walk"
+      }
+    },
+    "artist": {
+      "idle": {
+        "src": "artist/strips/idle.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_idle"
+      },
+      "nod": {
+        "src": "artist/strips/nod.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_nod"
+      },
+      "om": {
+        "src": "artist/strips/om.webp",
+        "frames": 4,
+        "fps": 1,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_om"
+      },
+      "laugh": {
+        "src": "artist/strips/laugh.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_laugh"
+      },
+      "shock": {
+        "src": "artist/strips/shock.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": false,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_shock"
+      },
+      "walk": {
+        "src": "artist/strips/walk.webp",
+        "frames": 4,
+        "fps": 5,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_walk"
+      }
+    },
+    "pinkmask": {
+      "idle": {
+        "src": "pinkmask/strips/idle.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_idle"
+      },
+      "nod": {
+        "src": "pinkmask/strips/nod.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_nod"
+      },
+      "om": {
+        "src": "pinkmask/strips/om.webp",
+        "frames": 4,
+        "fps": 1,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_om"
+      },
+      "laugh": {
+        "src": "pinkmask/strips/laugh.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_laugh"
+      },
+      "shock": {
+        "src": "pinkmask/strips/shock.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": false,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_shock"
+      },
+      "walk": {
+        "src": "pinkmask/strips/walk.webp",
+        "frames": 4,
+        "fps": 5,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_walk"
+      }
+    },
+    "maroon": {
+      "idle": {
+        "src": "maroon/strips/idle.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_idle"
+      },
+      "nod": {
+        "src": "maroon/strips/nod.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_nod"
+      },
+      "om": {
+        "src": "maroon/strips/om.webp",
+        "frames": 4,
+        "fps": 1,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_om"
+      },
+      "laugh": {
+        "src": "maroon/strips/laugh.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_laugh"
+      },
+      "shock": {
+        "src": "maroon/strips/shock.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": false,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_shock"
+      },
+      "walk": {
+        "src": "maroon/strips/walk.webp",
+        "frames": 4,
+        "fps": 5,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_walk"
+      }
+    },
+    "straw": {
+      "idle": {
+        "src": "straw/strips/idle.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_idle"
+      },
+      "nod": {
+        "src": "straw/strips/nod.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_nod"
+      },
+      "om": {
+        "src": "straw/strips/om.webp",
+        "frames": 4,
+        "fps": 1,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_om"
+      },
+      "laugh": {
+        "src": "straw/strips/laugh.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_laugh"
+      },
+      "shock": {
+        "src": "straw/strips/shock.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": false,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_shock"
+      },
+      "walk": {
+        "src": "straw/strips/walk.webp",
+        "frames": 4,
+        "fps": 5,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_walk"
+      }
+    },
+    "studio": {
+      "idle": {
+        "src": "studio/strips/idle.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_idle"
+      },
+      "nod": {
+        "src": "studio/strips/nod.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_nod"
+      },
+      "om": {
+        "src": "studio/strips/om.webp",
+        "frames": 4,
+        "fps": 1,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_om"
+      },
+      "laugh": {
+        "src": "studio/strips/laugh.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_laugh"
+      },
+      "shock": {
+        "src": "studio/strips/shock.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": false,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_shock"
+      },
+      "walk": {
+        "src": "studio/strips/walk.webp",
+        "frames": 4,
+        "fps": 5,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_walk"
+      }
+    },
+    "llama": {
+      "idle": {
+        "src": "llama/strips/idle.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_idle"
+      },
+      "nod": {
+        "src": "llama/strips/nod.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_nod"
+      },
+      "om": {
+        "src": "llama/strips/om.webp",
+        "frames": 4,
+        "fps": 1,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_om"
+      },
+      "laugh": {
+        "src": "llama/strips/laugh.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_laugh"
+      },
+      "shock": {
+        "src": "llama/strips/shock.webp",
+        "frames": 4,
+        "fps": 3,
+        "loop": false,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_shock"
+      },
+      "walk": {
+        "src": "llama/strips/walk.webp",
+        "frames": 4,
+        "fps": 5,
+        "loop": true,
+        "cell": [
+          256,
+          256
+        ],
+        "sourceAction": "Kujo_walk"
+      }
+    }
+  }
+}

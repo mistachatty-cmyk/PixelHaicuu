@@ -1,0 +1,59 @@
+{
+  "v": 1,
+  "order": [
+    "classic",
+    "artist",
+    "pinkmask",
+    "maroon",
+    "straw",
+    "studio",
+    "llama"
+  ],
+  "aliases": {
+    "bucket": "artist"
+  },
+  "looks": [
+    {
+      "id": "classic",
+      "name": "Pink Dreads",
+      "theme": "day",
+      "src": "classic/manifest.json"
+    },
+    {
+      "id": "artist",
+      "name": "Artist",
+      "theme": "day",
+      "src": "artist/manifest.json"
+    },
+    {
+      "id": "pinkmask",
+      "name": "Pink Mask",
+      "theme": "day",
+      "src": "pinkmask/manifest.json"
+    },
+    {
+      "id": "maroon",
+      "name": "Maroon Mask",
+      "theme": "dusk",
+      "src": "maroon/manifest.json"
+    },
+    {
+      "id": "straw",
+      "name": "Straw Hat",
+      "theme": "dusk",
+      "src": "straw/manifest.json"
+    },
+    {
+      "id": "studio",
+      "name": "Studio",
+      "theme": "night",
+      "src": "studio/manifest.json"
+    },
+    {
+      "id": "llama",
+      "name": "Llamasté",
+      "theme": "day",
+      "src": "llama/manifest.json"
+    }
+  ]
+}

@@ -15,11 +15,11 @@ const server = http.createServer((q, r) => {
   let p = path.join(dist, q.url.split('?')[0]);
   if (fs.existsSync(p) && fs.statSync(p).isDirectory()) p = path.join(p, 'index.html');
   if (!fs.existsSync(p)) { r.writeHead(404); return r.end(); }
-  r.writeHead(200, { 'content-type': p.endsWith('.json') ? 'application/json' : 'text/html' });
+  r.writeHead(200, { 'content-type': ({'.json':'application/json','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2','.ttf':'font/ttf','.html':'text/html'})[path.extname(p)] || 'application/octet-stream' });
   fs.createReadStream(p).pipe(r);
 }).listen(0);
 const port = server.address().port;
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--no-sandbox'] });
 const errors = [];
 const results = [];
 const ok = (name, v) => { results.push((v ? 'PASS ' : 'FAIL ') + name); };
@@ -89,3 +89,4 @@ await browser.close();
 server.close();
 console.log(results.join('\n'));
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'no page errors');
+process.exitCode = errors.length || results.some(r => r.startsWith('FAIL ')) ? 1 : 0;

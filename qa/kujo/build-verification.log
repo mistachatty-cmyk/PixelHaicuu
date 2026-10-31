@@ -1,0 +1,15 @@
+
+> pixelhaicuu@0.1.0 test
+> npm run build && npm run verify && node tools/verify-kujo.mjs
+
+
+> pixelhaicuu@0.1.0 build
+> node tools/build.mjs
+
+built dist/index.html 113.3 KB
+
+> pixelhaicuu@0.1.0 verify
+> node tools/verify-dist.mjs
+
+dist verified: no source maps, no service worker, no console calls, no local paths
+Kujo verified: 7 looks, 93 registered RGBA layers, 42 lossless four-cell strips.

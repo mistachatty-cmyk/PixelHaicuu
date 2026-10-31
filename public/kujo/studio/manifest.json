@@ -1,0 +1,278 @@
+{
+  "v": 1,
+  "id": "studio",
+  "name": "Studio",
+  "theme": "night",
+  "aura": "#4cc6ca",
+  "species": "human",
+  "canvas": [
+    512,
+    512
+  ],
+  "seat": [
+    256,
+    500
+  ],
+  "heightStage": 78,
+  "hit": [
+    60,
+    20,
+    392,
+    480
+  ],
+  "headPivot": [
+    256,
+    239
+  ],
+  "eyeLine": 159,
+  "layers": [
+    {
+      "id": "back_hair",
+      "src": "back_hair.png",
+      "pivot": [
+        256,
+        239
+      ],
+      "motion": {
+        "follow": "head",
+        "lag": 0.32,
+        "sway": 1.15
+      }
+    },
+    {
+      "id": "torso",
+      "src": "torso.png",
+      "pivot": [
+        256,
+        500
+      ],
+      "motion": {
+        "bounce": 1,
+        "breath": 1
+      }
+    },
+    {
+      "id": "head",
+      "src": "head.png",
+      "pivot": [
+        256,
+        239
+      ],
+      "motion": {
+        "nod": 1,
+        "tilt": 1
+      }
+    },
+    {
+      "id": "eyes",
+      "set": {
+        "open": "eyes_open.png",
+        "closed": "eyes_closed.png",
+        "happy": "eyes_happy.png",
+        "wide": "eyes_wide.png"
+      },
+      "pivot": [
+        256,
+        239
+      ],
+      "motion": {
+        "follow": "head",
+        "gaze": 1
+      }
+    },
+    {
+      "id": "mouth",
+      "set": {
+        "calm": "mouth_calm.png",
+        "smile": "mouth_smile.png",
+        "open": "mouth_open.png"
+      },
+      "pivot": [
+        256,
+        239
+      ],
+      "motion": {
+        "follow": "head"
+      }
+    },
+    {
+      "id": "headwear",
+      "src": "headwear.png",
+      "pivot": [
+        256,
+        239
+      ],
+      "motion": {
+        "follow": "head",
+        "lag": 0.12
+      }
+    },
+    {
+      "id": "front_hair",
+      "src": "front_hair.png",
+      "pivot": [
+        256,
+        239
+      ],
+      "motion": {
+        "follow": "head",
+        "lag": 0.24,
+        "sway": 1.35
+      }
+    },
+    {
+      "id": "accessory_watch",
+      "src": "accessory_watch.png",
+      "pivot": [
+        256,
+        500
+      ],
+      "motion": {
+        "bounce": 1
+      }
+    },
+    {
+      "id": "accessory_strap",
+      "src": "accessory_strap.png",
+      "pivot": [
+        256,
+        500
+      ],
+      "motion": {
+        "bounce": 1
+      }
+    }
+  ],
+  "expressions": {
+    "calm": {
+      "eyes": "open",
+      "mouth": "calm"
+    },
+    "happy": {
+      "eyes": "happy",
+      "mouth": "smile"
+    },
+    "om": {
+      "eyes": "closed",
+      "mouth": "calm"
+    },
+    "shock": {
+      "eyes": "wide",
+      "mouth": "open"
+    },
+    "laugh": {
+      "eyes": "happy",
+      "mouth": "open"
+    }
+  },
+  "source": {
+    "kind": "approved illustrated layers",
+    "master": "studio.png",
+    "palette": "art/palette.json",
+    "rig": "kujo-seated-v1"
+  },
+  "rigAnimations": {
+    "idle": {
+      "src": "strips/idle.webp",
+      "frames": 4,
+      "fps": 3,
+      "loop": true,
+      "cell": [
+        256,
+        256
+      ],
+      "sourceAction": "Kujo_idle"
+    },
+    "nod": {
+      "src": "strips/nod.webp",
+      "frames": 4,
+      "fps": 3,
+      "loop": true,
+      "cell": [
+        256,
+        256
+      ],
+      "sourceAction": "Kujo_nod"
+    },
+    "om": {
+      "src": "strips/om.webp",
+      "frames": 4,
+      "fps": 1,
+      "loop": true,
+      "cell": [
+        256,
+        256
+      ],
+      "sourceAction": "Kujo_om"
+    },
+    "laugh": {
+      "src": "strips/laugh.webp",
+      "frames": 4,
+      "fps": 3,
+      "loop": true,
+      "cell": [
+        256,
+        256
+      ],
+      "sourceAction": "Kujo_laugh"
+    },
+    "shock": {
+      "src": "strips/shock.webp",
+      "frames": 4,
+      "fps": 3,
+      "loop": false,
+      "cell": [
+        256,
+        256
+      ],
+      "sourceAction": "Kujo_shock"
+    },
+    "walk": {
+      "src": "strips/walk.webp",
+      "frames": 4,
+      "fps": 5,
+      "loop": true,
+      "cell": [
+        256,
+        256
+      ],
+      "sourceAction": "Kujo_walk"
+    }
+  },
+  "surface": {
+    "version": 2,
+    "renderer": "connected-skin",
+    "eyes": [
+      [
+        224,
+        159,
+        19,
+        15
+      ],
+      [
+        288,
+        159,
+        19,
+        15
+      ]
+    ],
+    "mouth": [
+      222,
+      184,
+      68,
+      28
+    ],
+    "colors": {
+      "original": {
+        "calm": "surface/original-calm.png",
+        "closed": "surface/original-closed.png",
+        "wide": "surface/original-wide.png"
+      },
+      "corrected": {
+        "calm": "surface/corrected-calm.png",
+        "closed": "surface/corrected-closed.png",
+        "wide": "surface/corrected-wide.png"
+      }
+    }
+  }
+}

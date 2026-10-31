@@ -1,0 +1,39 @@
+{
+  "verifiedAt": "2026-10-31T20:30:47.528971+00:00",
+  "builtHtmlSha256": "9716829d98525073c73dbe846b268a1a146bdd08b953041e20fe677d891ef288",
+  "shippingManifests": {
+    "classic": "e7bfc8793af2f46ceab6a4fc3a76c1b3566e6c6a0e598f06ac2e3361a8a863c9",
+    "artist": "a3501d1c532b4b9e670cf5103ae1e908c5d0f27827a3635ad34547d6cb7af30e",
+    "pinkmask": "1c86e6af72f75167142b78a00adb9852a72dfd987d2816ab2da063ad6d4e1d3f",
+    "maroon": "fff5dc84bbfa9c7426c0b084103fbf58285144812f9f8bce92c6863e68adce9f",
+    "straw": "e427124e672cda2bc748e2e7f8d7f6e9f6efdbf97a145aed031786bce533be86",
+    "studio": "fb8886186da9c20b8768890de1cfcc5529d156dd4249d1e075b7df22acb8514d",
+    "llama": "7bcc10dd1dfd1316169ec271f90db9f0c34db3f8095b7b8a5c9b25d6987c567b"
+  },
+  "checks": {
+    "npmTest": "passed",
+    "vendoredLibraryDiff": "empty",
+    "browserViewports": 4,
+    "looksPerViewport": 7,
+    "browserErrors": 0,
+    "libraryBehaviorTests": 15,
+    "artPaletteRoles": 9,
+    "skinnedModels": 7,
+    "modelJoints": 23,
+    "animationsPerModel": 6,
+    "renderStrips": 42,
+    "stripCells": [
+      256,
+      256
+    ],
+    "stripFrames": 4,
+    "modelClippingFailures": 0,
+    "libraryHarnesses": 3,
+    "worldGestureJourney": "passed"
+  },
+  "deployed": false,
+  "pushedImplementationCheckpoints": {
+    "library": "5ad8448",
+    "page": "69df77a"
+  }
+}

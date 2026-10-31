@@ -1,6 +1,8 @@
 // The Bible reader overlay: opens like a book, shows a verse card first, then lets people read any chapter (KJV).
 // Book text is data (public/bible/kjv/<book>.json), loaded one book at a time. Verses can be tapped to highlight.
+import { bindDialogFocus } from './dialog-focus.js';
 const $ = (id) => document.getElementById(id);
+export const LOK_BIBLE_URL = 'https://gsix.online/lokbounce';
 
 // A short list of well-loved verses for the opening card: [book id, chapter, verse].
 const FEATURED = [
@@ -20,6 +22,7 @@ export class BibleReader {
   constructor(hooks = {}) {
     this.h = hooks;
     this.el = $('bible');
+    bindDialogFocus(this.el);
     this.isOpen = false;
     this.index = null;
     this.cache = new Map();
@@ -35,6 +38,8 @@ export class BibleReader {
   sfx(n, a) { this.h.sfx && this.h.sfx(n, a); }
 
   bind() {
+    const download = $('lok-bible-download');
+    if (download) { download.hidden = !LOK_BIBLE_URL; download.href = LOK_BIBLE_URL; }
     $('bx').onclick = () => this.close();
     this.el.addEventListener('pointerdown', (e) => { if (e.target === this.el) this.close(); });
     $('bnew').onclick = () => { this.sfx('page'); this.h.buzz && this.h.buzz(8); this.nextFeatured(); };
