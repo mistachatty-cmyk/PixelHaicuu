@@ -6,8 +6,8 @@ const $ = (id) => document.getElementById(id);
 const FEATURED = [
   ['psalms', 23, 1], ['john', 3, 16], ['philippians', 4, 13], ['proverbs', 3, 5], ['isaiah', 40, 31], ['jeremiah', 29, 11],
   ['romans', 8, 28], ['matthew', 11, 28], ['joshua', 1, 9], ['psalms', 46, 10], ['psalms', 121, 1], ['matthew', 5, 9],
-  ['1corinthians', 13, 4], ['romans', 12, 2], ['psalms', 118, 24], ['galatians', 5, 22], ['micah', 6, 8], ['matthew', 6, 33],
-  ['john', 14, 27], ['isaiah', 41, 10], ['psalms', 27, 1], ['proverbs', 16, 3], ['2timothy', 1, 7], ['john', 8, 12],
+  ['1-corinthians', 13, 4], ['romans', 12, 2], ['psalms', 118, 24], ['galatians', 5, 22], ['micah', 6, 8], ['matthew', 6, 33],
+  ['john', 14, 27], ['isaiah', 41, 10], ['psalms', 27, 1], ['proverbs', 16, 3], ['2-timothy', 1, 7], ['john', 8, 12],
 ];
 
 const store = {
