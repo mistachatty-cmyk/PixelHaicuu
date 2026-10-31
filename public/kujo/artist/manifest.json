@@ -227,5 +227,41 @@
       ],
       "sourceAction": "Kujo_walk"
     }
+  },
+  "surface": {
+    "version": 2,
+    "renderer": "connected-skin",
+    "eyes": [
+      [
+        221,
+        160,
+        19,
+        18
+      ],
+      [
+        290,
+        160,
+        19,
+        18
+      ]
+    ],
+    "mouth": [
+      221,
+      189,
+      70,
+      28
+    ],
+    "colors": {
+      "original": {
+        "calm": "surface/original-calm.png",
+        "closed": "surface/original-closed.png",
+        "wide": "surface/original-wide.png"
+      },
+      "corrected": {
+        "calm": "surface/corrected-calm.png",
+        "closed": "surface/corrected-closed.png",
+        "wide": "surface/corrected-wide.png"
+      }
+    }
   }
 }

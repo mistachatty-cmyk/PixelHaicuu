@@ -13,6 +13,10 @@ const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 let reduce = motionPreference.matches;
 motionPreference.addEventListener('change', (e) => { reduce = e.matches; if (reduce) { kujo.sprite?.reset(); kujo.setHold(false); } });
 
+const readPreference = (key, fallback) => { try { const value=localStorage.getItem(key); return value===null?fallback:JSON.parse(value); } catch { return fallback; } };
+const savePreference = (key, value) => { try { localStorage.setItem(key,JSON.stringify(value)); } catch { /* private storage */ } };
+let correctedColors=readPreference('hx.correctedColors',true);
+let effects=readPreference('hx.effects',true);
 const NAMES = { llama: 'Llamasté' };
 const lookName = (def) => NAMES[def.id] || def.name;
 
@@ -41,21 +45,25 @@ fitToyCanvas();
 const spriteLooks = new Map();
 const spriteLoads = new Map();
 let spriteRequest = 0;
+function trimLooks() {
+  while(spriteLooks.size>2){const entry=[...spriteLooks].find(([,look])=>look!==kujo.sprite);if(!entry)break;spriteLooks.delete(entry[0]);entry[1].destroy();}
+}
 function loadLook(id) {
-  if (!spriteLoads.has(id)) spriteLoads.set(id, SpriteLook.load('kujo/' + id + '/manifest.json').then((look) => { spriteLooks.set(id, look); return look; }).catch(() => { spriteLoads.delete(id); return null; }));
+  if(spriteLooks.has(id))return Promise.resolve(spriteLooks.get(id));
+  if (!spriteLoads.has(id)) spriteLoads.set(id, SpriteLook.load('kujo/' + id + '/manifest.json').then((look) => { spriteLooks.set(id, look); trimLooks(); return look; }).catch(() => null).finally(()=>spriteLoads.delete(id)));
   return spriteLoads.get(id);
 }
 async function applySprite() {
-  const id = kujo.id;
-  const request = ++spriteRequest;
-  kujo.sprite = spriteLooks.get(id) || null;
-  spriteCanvas.dataset.look = id;
-  spriteCanvas.dataset.ready = String(!!kujo.sprite);
-  const look = kujo.sprite || await loadLook(id);
-  if (request !== spriteRequest || kujo.id !== id) return;
-  kujo.sprite = look;
-  spriteCanvas.dataset.ready = String(!!look);
-  if (look) { look.reset(); look.setGaze(...gazeTarget); }
+  const id = kujo.id,request=++spriteRequest;
+  const cached=spriteLooks.get(id);
+  spriteCanvas.dataset.look=id;spriteCanvas.dataset.ready=String(!!cached);
+  // Retain the current illustration while its replacement loads; failed art still uses the coded fallback.
+  if(cached)kujo.sprite=cached;
+  const look=cached||await loadLook(id);
+  if(request!==spriteRequest||kujo.id!==id)return;
+  kujo.sprite=look;spriteCanvas.dataset.ready=String(!!look);
+  if(look){spriteLooks.delete(id);spriteLooks.set(id,look);look.corrected=correctedColors;look.reset();look.setGaze(...gazeTarget);}
+  trimLooks();
 }
 let gazeTarget = [0, 0];
 function trackAt(sx, sy) {
@@ -64,10 +72,10 @@ function trackAt(sx, sy) {
   kujo.sprite?.setGaze(...gazeTarget);
 }
 function resetGaze() { gazeTarget = [0, 0]; kujo.sprite?.setGaze(0, 0); }
-applySprite().then(() => { for (const id of VARIANT_ORDER) if (id !== kujo.id) loadLook(id); });
+applySprite();
 beat.on((info) => world.onBeat(info));
 // the world tells us about its little events (cardinal, wishes, planted flowers): give them sound and a tiny buzz
-const soundFor = { plant: () => synth.pop(), catch: () => synth.sparkle(), chirp: () => synth.chirp(), cardinal: () => synth.chirp(), wish: () => synth.chime(), firefly: () => synth.boop(), shake: () => synth.boop(), pluck: () => { synth.sparkle(); buzz(5); }, pet: () => synth.boop(), pull: () => synth.tick(300) };
+const soundFor = { plant: () => synth.pop(), catch: () => synth.sparkle(), chirp: () => synth.chirp(), cardinal: () => synth.chirp(), wish: () => synth.chime(), firefly: () => synth.boop(), shake: () => synth.boop(), pluck: () => { synth.sparkle(); buzz(5); }, pet: () => synth.boop(), flower: () => { synth.boop(); buzz(6); }, pull: () => synth.tick(300) };
 
 // ---- feel helpers ------------------------------------------------------------------------------------------------
 world.onEvent = (name) => { synth.ensure(); const f = soundFor[name]; if (f) f(); };
@@ -78,7 +86,7 @@ const reader = new BibleReader({
   sfx: (n, a) => { synth.ensure(); if (typeof synth[n] === 'function') synth[n](a); },
   buzz,
   onOpen: () => { bible.hide(); },
-  onClose: () => { bible.popBack(); },
+  onClose: () => { if(effects&&!reduce)bible.popBack();else bible.hide(); },
 });
 const bible = new BibleBounce({
   stage, kit,
@@ -97,7 +105,7 @@ function fitBible() {
     hudTop = top;
     world.setBottomReserve(stage.h + 26 - (top - 14) / stage.scale);
   }
-  bible.setBounds(Math.ceil(46 / stage.scale), Math.floor((hudTop - 8) / stage.scale));
+  bible.setBounds(Math.ceil(80 / stage.scale), Math.floor((hudTop - 8) / stage.scale));
 }
 stage.onResize.push(fitBible);
 const hudResize = new ResizeObserver(() => requestAnimationFrame(fitBible));
@@ -225,91 +233,74 @@ document.addEventListener('pointerdown', (e) => {
   b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
 });
 
-let lastTap = [0, 0];
-let claimed = null;
-let characterHold = null;
-attachPointer(stage, {
-  enabled: () => !reader.isOpen && sheet.hidden,
-  onDown: (sx, sy, info) => {
-    if (!ready) return false;
-    if (bible.pointerDown(sx, sy)) { claimed = { kind: 'bible' }; return true; }
-    const [wx, wy] = world.toWorld(sx, sy);
-    if (!kujo.hit(wx, wy)) {
-      if (world.alpacaAt(wx, wy)) { claimed = { kind: 'alpaca' }; world.petAlpaca(wx, wy); return true; }
-      if (world.beginPetalPull(wx, wy)) { claimed = { kind: 'petal', x: wx, y: wy, vx: 0, vy: 0 }; return true; }
-      return false;
+let claimed=null,characterHold=null;
+function tapWorld(sx,sy){
+  const [wx,wy]=world.toWorld(sx,sy),hit=world.tap(wx,wy);
+  if(hit==='sun'||hit==='title')synth.sparkle();
+  else if(hit==='alpaca'||hit==='flower')synth.boop();
+  else if(hit)synth.pop();
+  if(!hit||hit==='ground')world.gust(wx,wy,0,-6,34);
+  buzz(hit?8:4);
+}
+attachPointer(stage,{
+  enabled:()=>!reader.isOpen&&sheet.hidden,
+  onDown:(sx,sy,info)=>{
+    if(!ready)return false;
+    trackAt(sx,sy);
+    if(bible.pointerDown(sx,sy)){claimed={kind:'bible',pointerType:info.pointerType};return true;}
+    const [wx,wy]=world.toWorld(sx,sy);
+    if(kujo.hit(wx,wy)){
+      claimed={kind:'character',x:sx,y:sy,moved:false,held:false,pointerType:info.pointerType};
+      if(!reduce)kujo.nod.kick(-8);
+      characterHold=setTimeout(()=>{if(claimed?.kind==='character'&&!claimed.moved){claimed.held=true;kujo.setHold(true);synth.sparkle();buzz(8);}},450);
+    }else{
+      const flower=world.flowerAt(wx,wy),alpaca=world.alpacaAt(wx,wy);
+      claimed={kind:'world',x:sx,y:sy,lastX:sx,lastY:sy,wx,wy,mode:null,canopy:world.canopyAt(wx,wy),grass:wy>=world.groundY,flower:!!flower,alpaca,pointerType:info.pointerType};
+      if(flower)world.pokeFlower(wx,wy);
+      else if(alpaca)world.petAlpaca(wx,wy);
     }
-    claimed = { kind: 'character', x: sx, y: sy, moved: false, held: false, pointerType: info.pointerType };
-    trackAt(sx, sy);
-    if (!reduce) kujo.nod.kick(-8);
-    characterHold = setTimeout(() => {
-      if (claimed?.kind === 'character' && !claimed.moved) { claimed.held = true; kujo.setHold(true); synth.sparkle(); buzz(8); }
-    }, 450);
     return true;
   },
-  onClaimMove: (sx, sy) => {
-    if (claimed?.kind === 'bible') return bible.pointerMove(sx, sy);
-    if (claimed?.kind === 'alpaca') { const [wx, wy] = world.toWorld(sx, sy); world.petAlpaca(wx, wy); return; }
-    if (claimed?.kind === 'petal') {
-      const [wx, wy] = world.toWorld(sx, sy);
-      claimed.vx = (wx - claimed.x) * 10; claimed.vy = (wy - claimed.y) * 10; claimed.x = wx; claimed.y = wy;
-      world.movePetalPull(wx, wy); return;
+  onClaimMove:(sx,sy)=>{
+    if(!claimed)return;
+    trackAt(sx,sy);
+    if(claimed.kind==='bible')return bible.pointerMove(sx,sy);
+    const g=claimed,dx=sx-g.x,dy=sy-g.y,[wx,wy]=world.toWorld(sx,sy);
+    if(g.kind==='character'){
+      if(Math.hypot(dx,dy)*stage.scale>8){g.moved=true;clearTimeout(characterHold);kujo.setHold(false);}return;
     }
-    if (claimed?.kind !== 'character') return;
-    trackAt(sx, sy);
-    if (Math.hypot(sx - claimed.x, sy - claimed.y) * stage.scale > 8) {
-      claimed.moved = true; clearTimeout(characterHold); kujo.setHold(false);
+    if(!g.mode&&Math.hypot(dx,dy)*stage.scale>8){
+      g.mode=Math.abs(dy)>Math.abs(dx)*1.15?'scroll':g.canopy?'petal':g.alpaca?'pet':g.flower?'flower':g.grass?'paint':'gust';
+      if(g.mode==='petal')world.beginPetalPull(g.wx,g.wy);
     }
+    if(g.mode==='scroll')world.scrollBy(g.lastY-sy);
+    else if(g.mode==='petal'){g.vx=(sx-g.lastX)*10;g.vy=(sy-g.lastY)*10;world.movePetalPull(wx,wy);}
+    else if(g.mode==='pet')world.petAlpaca(wx,wy);
+    else if(g.mode==='flower'){if(world.flowerCooldown<=0)world.pokeFlower(wx,wy);}
+    else if(g.mode==='paint')world.plant(wx,wy,true);
+    else if(g.mode==='gust')world.gust(wx,wy,(sx-g.lastX)*2,(sy-g.lastY)*2,40);
+    g.lastX=sx;g.lastY=sy;
   },
-  onClaimUp: (sx, sy, info = {}) => {
-    clearTimeout(characterHold);
-    const gesture = claimed; claimed = null;
-    if (gesture?.kind === 'bible') return bible.pointerUp();
-    if (gesture?.kind === 'petal') return world.releasePetalPull(gesture.vx, gesture.vy, info.cancelled);
-    if (gesture?.kind === 'alpaca') return;
-    kujo.setHold(false);
-    if (gesture?.kind === 'character' && !info.cancelled && !gesture.moved && !gesture.held) { kujo.poke(); synth.poke(); switchLook(1); buzz(8); }
-    if (gesture?.pointerType === 'touch' || info.cancelled) resetGaze();
-  },
-  onDragXY: ([sx, sy], dx, dy) => {
-    if (!ready) return;
-    const [wx, wy] = world.toWorld(sx, sy);
-    if (world.gust(wx, wy, dx * 2, dy * 2, 40) && Math.random() < 0.25) particles.stars(wx, wy, 1, 3, 20);
-    world.plant(wx, wy, true);
-    world.pull(wx, wy);
-  },
-  onTap: (sx, sy) => {
-    if (!ready) return;
-    const [wx, wy] = world.toWorld(sx, sy);
-    lastTap = [wx, wy];
-    if (kujo.hit(wx, wy)) {
-      kujo.poke();
-      synth.poke();
-      switchLook(1);
-      return;
+  onClaimUp:(sx,sy,info={})=>{
+    clearTimeout(characterHold);const g=claimed;claimed=null;kujo.setHold(false);
+    if(!g)return;
+    if(g.kind==='bible'){bible.pointerUp(info);if(g.pointerType==='touch'||info.cancelled)resetGaze();return;}
+    if(g.mode==='petal')world.releasePetalPull(g.vx||0,g.vy||0,info.cancelled);
+    else if(!info.cancelled){
+      if(g.kind==='character'&&!g.moved&&!g.held){kujo.poke();synth.poke();switchLook(1);buzz(8);}
+      else if(g.kind==='world'&&!g.mode&&!g.flower&&!g.alpaca)tapWorld(sx,sy);
     }
-    const hit = world.tap(wx, wy);
-    if (hit === 'sun' || hit === 'title') synth.sparkle();
-    else if (hit === 'alpaca' || hit === 'flower') synth.boop();
-    else if (hit) synth.pop();
-    if (!hit || hit === 'ground') { particles.stars(wx, wy, 3, 4, 30); world.gust(wx, wy, 0, -6, 34); }
-    buzz(hit ? 8 : 4);
+    if(g.pointerType==='touch'||info.cancelled)resetGaze();
   },
-  onHold: (sx, sy, on) => {
-    if (!ready) return;
-    const [wx, wy] = world.toWorld(sx, sy);
-    if (on && kujo.hit(wx, wy)) { kujo.setHold(true); synth.sparkle(); } else kujo.setHold(false);
-  },
-  onDragY: (dy) => { if (ready) world.scrollBy(dy); },
-  onWheel: (dy) => { if (ready) world.scrollBy(dy); },
-  onKey: (k) => {
-    if (!ready) return;
-    if (k === 'ArrowDown' || k === 'PageDown') world.goTo('bottom');
-    else if (k === 'ArrowUp' || k === 'PageUp') world.goTo('top');
-    else if (k === 'ArrowRight') switchLook(1);
-    else if (k === 'ArrowLeft') switchLook(-1);
-    else if (k === ' ') togglePlay();
-  },
+  onWheel:dy=>{if(ready)world.scrollBy(dy);},
+  onKey:k=>{
+    if(!ready)return;
+    if(k==='ArrowDown'||k==='PageDown')world.goTo('bottom');
+    else if(k==='ArrowUp'||k==='PageUp')world.goTo('top');
+    else if(k==='ArrowRight')switchLook(1);
+    else if(k==='ArrowLeft')switchLook(-1);
+    else if(k===' ')togglePlay();
+  }
 });
 window.addEventListener('pointerup', () => kujo.setHold(false));
 
@@ -329,15 +320,32 @@ $('tx').onclick = closeSheet;
 $('tprev').onclick = () => { synth.ensure(); player.prev(); };
 $('tnext').onclick = () => { synth.ensure(); player.next(); };
 $('bibtn').onclick = () => { synth.ensure(); reader.open(); };
+function applyAppearance(){
+  document.body.dataset.palette=correctedColors?'corrected':'original';
+  document.body.dataset.effects=effects?'on':'off';
+  $('colors').textContent='COLOR '+(correctedColors?'ON':'OFF');
+  $('colors').setAttribute('aria-pressed',String(correctedColors));
+  $('colors').setAttribute('aria-label','Color correction '+(correctedColors?'on. Show original light colors.':'off. Show corrected colors.'));
+  $('effects').textContent='FX '+(effects?'ON':'OFF');$('effects').setAttribute('aria-pressed',String(effects));
+  for(const look of spriteLooks.values())look.corrected=correctedColors;
+  if(kujo.sprite)kujo.sprite.corrected=correctedColors;
+  world.effects=effects;particles.enabled=effects;bible.fx.enabled=effects;bible.effects=effects;
+  if(!effects){particles.list.length=0;bible.fx.list.length=0;bible.hide();}
+  else if(ready&&!reduce&&!bible.visible)bible.spawn();
+}
+$('colors').onclick=()=>{correctedColors=!correctedColors;savePreference('hx.correctedColors',correctedColors);applyAppearance();};
+$('effects').onclick=()=>{effects=!effects;savePreference('hx.effects',effects);applyAppearance();};
+applyAppearance();
+
 // hover feedback: pointer cursor over anything touchable
-canvas.addEventListener('pointermove', (e) => {
+window.addEventListener('pointermove', (e) => {
   if (!ready || reader.isOpen || !sheet.hidden) return;
   const [sx, sy] = stage.toStage(e.clientX, e.clientY);
   if (e.pointerType !== 'touch') trackAt(sx, sy);
   const onBible = bible.hit(sx, sy);
   bible.setHover(onBible);
   const [wx, wy] = world.toWorld(sx, sy);
-  canvas.style.cursor = onBible ? 'grab' : kujo.hit(wx, wy) ? 'pointer' : 'default';
+  canvas.style.cursor = onBible ? 'grab' : kujo.hit(wx, wy)||world.flowerAt(wx,wy)||world.alpacaAt(wx,wy) ? 'pointer' : world.canopyAt(wx,wy)?'grab':'default';
 });
 canvas.addEventListener('pointerleave', () => { if (!claimed) resetGaze(); });
 window.addEventListener('blur', resetGaze);
@@ -399,11 +407,12 @@ function arrive() {
   $('skip').classList.add('gone');
   $('hud').classList.add('on');
   $('brand').style.opacity = 1;
+  $('appearance').hidden=false;
   $('scrollbtn').classList.add('on');
   world.showSign(true);
   showLook();
   fitBible();
-  setTimeout(() => { if (!reduce) { bible.spawn(); synth.pop(); } }, 900);
+  setTimeout(() => { if (!reduce&&effects) { bible.spawn(); synth.pop(); } }, 900);
   kujo.expr = 'happy';
   kujo.exprT = 1.4;
   particles.hearts(kujo.x, kujo.y - 66, 5, 12);

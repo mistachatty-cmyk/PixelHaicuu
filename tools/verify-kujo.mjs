@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 const root=path.resolve(import.meta.dirname,'../public/kujo');
 const atlas=JSON.parse(fs.readFileSync(path.join(root,'atlas.json')));
 assert.deepEqual(atlas.order,['classic','artist','pinkmask','maroon','straw','studio','llama']);
-let images=0,strips=0;
+let images=0,strips=0,surfaces=0;
 const resolve=(base,src)=>{assert.ok(typeof src==='string'&&!src.includes('..')&&!/^(?:https?:|data:|\/)/.test(src),'Art references must be local relative paths');return path.join(base,src);};
 for(const id of atlas.order){
  const dir=path.join(root,id),m=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json')));
@@ -19,6 +19,10 @@ for(const id of atlas.order){
    const b=fs.readFileSync(resolve(dir,src));assert.equal(b.subarray(1,4).toString(),'PNG');assert.equal(b.readUInt32BE(16),512);assert.equal(b.readUInt32BE(20),512);assert.equal(b[25],6,'Layer PNG must retain RGBA');images++;
   }
  }
+ assert.equal(m.surface?.renderer,'connected-skin');
+ for(const color of ['original','corrected'])for(const state of ['calm','closed','wide']){
+  const b=fs.readFileSync(resolve(dir,m.surface.colors[color][state]));assert.equal(b.subarray(1,4).toString(),'PNG');assert.equal(b.readUInt32BE(16),512);assert.equal(b.readUInt32BE(20),512);assert.equal(b[25],6);surfaces++;
+ }
  assert.deepEqual(Object.keys(m.rigAnimations),['idle','nod','om','laugh','shock','walk']);
  for(const a of Object.values(m.rigAnimations)){
   assert.equal(a.frames,4);assert.deepEqual(a.cell,[256,256]);
@@ -27,4 +31,4 @@ for(const id of atlas.order){
  }
 }
 const rigAtlas=JSON.parse(fs.readFileSync(path.join(root,'rig-atlas.json')));for(const animations of Object.values(rigAtlas.looks))for(const a of Object.values(animations))assert.ok(fs.existsSync(resolve(root,a.src)));
-console.log('Kujo verified: 7 looks, '+images+' registered RGBA layers, '+strips+' lossless four-cell strips.');
+console.log('Kujo verified: 7 looks, '+images+' registered RGBA layers, '+surfaces+' continuous color/expression skins, '+strips+' lossless four-cell strips.');
