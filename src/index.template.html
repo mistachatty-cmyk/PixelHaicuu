@@ -54,6 +54,32 @@
   #skip.gone { display:none; }
   #noscript { position:fixed; inset:0; display:grid; place-items:center; text-align:center; padding:24px; font-size:12px; line-height:2; }
 
+
+  /* Track sheet (Pixel Q Music + MP3s) */
+  #tracks { position:fixed; inset:0; z-index:15; display:flex; align-items:flex-end; justify-content:center; background:rgba(74,31,70,0); transition:background .3s; padding:0 10px max(10px,env(safe-area-inset-bottom)); }
+  #tracks[hidden] { display:none; }
+  #tracks.open { background:rgba(74,31,70,.45); }
+  .sheet { width:min(560px,100%); max-height:78vh; display:flex; flex-direction:column; background:var(--paper); color:var(--ink); transform:translateY(110%); transition:transform .38s cubic-bezier(.2,1.25,.4,1);
+    box-shadow:0 0 0 4px var(--ink), 0 0 0 8px var(--pink), 0 0 0 12px var(--ink); margin-bottom:12px; }
+  #tracks.open .sheet { transform:none; }
+  .sheet header { display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--hot); color:#fff; box-shadow:0 4px 0 #b0126f; }
+  .sheet header .ttl { flex:1; font-size:10px; line-height:1.7; text-shadow:2px 2px 0 var(--ink); }
+  .sheet header .ttl small { display:block; font-size:7px; color:#ffe9f6; }
+  #tlist { overflow:auto; padding:10px 12px 14px; overscroll-behavior:contain; }
+  .grp { font-size:7px; letter-spacing:.12em; color:#b0126f; margin:12px 2px 8px; }
+  .trk { display:flex; align-items:center; gap:10px; width:100%; text-align:left; margin:0 0 8px; padding:10px 12px; min-height:48px; background:#fff; font-size:8px; line-height:1.7; }
+  .trk .n { color:#b0126f; width:16px; flex:none; }
+  .trk .nm { flex:1; min-width:0; }
+  .trk .nm small { display:block; font-size:6px; color:#8a5a86; }
+  .trk .eq { display:none; gap:2px; align-items:flex-end; height:14px; }
+  .trk .eq i { width:3px; background:var(--hot); height:4px; }
+  .trk[aria-current="true"] { background:#ffe566; }
+  .trk[aria-current="true"] .eq { display:flex; }
+  .trk.live .eq i { animation:eq .5s ease-in-out infinite alternate; }
+  .trk.live .eq i:nth-child(2) { animation-delay:.12s; } .trk.live .eq i:nth-child(3) { animation-delay:.24s; }
+  @keyframes eq { to { height:14px; } }
+  #tnote { font-size:7px; line-height:1.9; color:#8a5a86; padding:2px 4px 6px; }
+  @media (prefers-reduced-motion: reduce) { .sheet { transition:none; } .trk.live .eq i { animation:none; height:9px; } }
   /* Bible reader */
   #bible { position:fixed; inset:0; z-index:20; display:grid; place-items:center; padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom)); background:rgba(42,20,32,0); transition:background .35s; perspective:1100px; }
   #bible[hidden] { display:none; }
@@ -113,12 +139,19 @@
     <button id="prev" aria-label="Previous look">◀</button>
     <button id="look" aria-label="Current look: tap to change">LOOK</button>
     <button id="next" aria-label="Next look">▶</button>
+    <button id="auto" aria-label="Switch looks automatically" aria-pressed="false">AUTO</button>
   </div>
   <div class="row">
     <button id="play" aria-label="Play music" aria-pressed="false">♪ PLAY</button>
+    <button id="songs" aria-label="Choose a song">♫ SONGS</button>
     <button id="mute" aria-label="Sound on/off" aria-pressed="false">SOUND</button>
-    <button id="auto" aria-label="Switch looks automatically" aria-pressed="false">AUTO</button>
     <button id="bibtn" aria-label="Open the Bible">✝ BIBLE</button>
+  </div>
+</div>
+<div id="tracks" role="dialog" aria-modal="true" aria-label="Music" hidden>
+  <div class="sheet">
+    <header><div class="ttl">♫ MUSIC<small>PIXEL Q MUSIC · LLAMASTÉ PRODUCTIONS</small></div><button id="tprev" aria-label="Previous song">⏮</button><button id="tnext" aria-label="Next song">⏭</button><button id="tx" aria-label="Close music">✕</button></header>
+    <div id="tlist"></div>
   </div>
 </div>
 <div id="bible" role="dialog" aria-modal="true" aria-label="Holy Bible reader" hidden>

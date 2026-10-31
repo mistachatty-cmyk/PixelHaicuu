@@ -1,7 +1,7 @@
 // The HaiCuu Experience - Kujo-sama page. Wires the Lok Pixel Library (vendored in ../lib) to the DOM:
 // intro (LLAMASTE -> petals -> title -> camera glides down to Kujo), interaction, music and the HUD.
 import {
-  createStage, SakuraWorld, Kujo, Particles, BeatEngine, makeKit, Synth, MusicPlayer, BibleBounce,
+  createStage, SakuraWorld, Kujo, Particles, BeatEngine, makeKit, Synth, MusicPlayer, BibleBounce, pixelQTracks, PIXELQ, THEMES,
   attachPointer, revealWords, sleep, VARIANTS, VARIANT_ORDER,
 } from '../lib/index.js';
 import { HAIKUS } from './haikus.js';
@@ -76,20 +76,78 @@ function setAuto(on) {
 }
 
 // ---- music -------------------------------------------------------------------------------------------------------
+// Pixel Q Music (procedural songs) first, then any MP3s listed in tracks.json
 const player = new MusicPlayer(synth, beat, {
-  tracks: [],
+  tracks: pixelQTracks(),
   onTrack: (tr) => {
     $('track').textContent = tr ? '♪ ' + (tr.title || '').toUpperCase() : '';
     $('play').setAttribute('aria-pressed', String(player.playing));
+    $('play').textContent = player.playing ? '♪ PAUSE' : '♪ PLAY';
     if (tr && tr.variant && VARIANTS[tr.variant]) switchLook(1, tr.variant);
-    else if (tr && tr.id !== 'demo' && player.tracks.length > 1) switchLook(1);
+    else if (tr && player.tracks.length > 1) switchLook(1);
+    if (tr && tr.theme && THEMES[tr.theme]) world.setTheme(tr.theme);
+    markPlaying();
   },
 });
-fetch('tracks.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : [])).then((t) => { if (Array.isArray(t)) player.tracks = t; }).catch(() => {});
+fetch('tracks.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : [])).then((t) => {
+  if (Array.isArray(t) && t.length) { player.tracks = [...pixelQTracks(), ...t.filter((x) => x && x.src && x.title)]; buildList(); }
+}).catch(() => {});
+
+// ---- song sheet --------------------------------------------------------------------------------------------------
+const sheet = $('tracks');
+function buildList() {
+  const list = $('tlist');
+  list.innerHTML = '';
+  let group = null;
+  player.tracks.forEach((tr, i) => {
+    const g = tr.song ? PIXELQ.name : 'YOUR TRACKS';
+    if (g !== group) {
+      group = g;
+      const h = document.createElement('div');
+      h.className = 'grp';
+      h.textContent = tr.song ? PIXELQ.name + ' · LLAMASTÉ PRODUCTIONS' : 'MP3 TRACKS';
+      list.appendChild(h);
+    }
+    const b = document.createElement('button');
+    b.className = 'trk';
+    b.dataset.i = i;
+    const look = tr.variant && VARIANTS[tr.variant] ? lookName(VARIANTS[tr.variant]) : '';
+    b.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="nm"></span><span class="eq"><i></i><i></i><i></i></span>';
+    b.querySelector('.nm').textContent = (tr.title || '').toUpperCase();
+    const sm = document.createElement('small');
+    sm.textContent = [tr.bpm ? tr.bpm + ' BPM' : '', look].filter(Boolean).join(' · ');
+    b.querySelector('.nm').appendChild(sm);
+    b.onclick = () => { synth.ensure(); player.play(i); };
+    list.appendChild(b);
+  });
+  markPlaying();
+}
+function markPlaying() {
+  document.querySelectorAll('.trk').forEach((b) => {
+    const on = +b.dataset.i === player.index;
+    b.setAttribute('aria-current', String(on));
+    b.classList.toggle('live', on && player.playing);
+  });
+}
+function openSheet() {
+  synth.ensure();
+  sheet.hidden = false;
+  void sheet.offsetWidth;
+  sheet.classList.add('open');
+  synth.pop();
+}
+function closeSheet() {
+  sheet.classList.remove('open');
+  setTimeout(() => { if (!sheet.classList.contains('open')) sheet.hidden = true; }, 380);
+}
+sheet.addEventListener('pointerdown', (e) => { if (e.target === sheet) closeSheet(); });
+window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sheet.hidden) closeSheet(); });
+buildList();
 
 function togglePlay() {
   synth.ensure();
   const on = player.toggle();
+  markPlaying();
   $('play').setAttribute('aria-pressed', String(on));
   $('play').textContent = on ? '♪ PAUSE' : '♪ PLAY';
   if (!on) $('track').textContent = '';
@@ -101,7 +159,7 @@ window.addEventListener('pointerdown', () => synth.ensure(), { once: true });
 // every button gets a click sound, a pop and a little buzz
 document.addEventListener('pointerdown', (e) => {
   const b = e.target.closest && e.target.closest('button');
-  if (!b || b.id === 'bnew' || b.id === 'bprev' || b.id === 'bnext' || b.id === 'bmode' || b.id === 'bread') return;
+  if (!b || b.classList.contains('trk') || b.id === 'bnew' || b.id === 'bprev' || b.id === 'bnext' || b.id === 'bmode' || b.id === 'bread') return;
   synth.ensure();
   if (b.id !== 'look' && b.id !== 'prev' && b.id !== 'next') synth.pop();
   buzz(5);
@@ -110,7 +168,7 @@ document.addEventListener('pointerdown', (e) => {
 
 let lastTap = [0, 0];
 attachPointer(stage, {
-  enabled: () => !reader.isOpen,
+  enabled: () => !reader.isOpen && sheet.hidden,
   onDown: (sx, sy) => (ready ? bible.pointerDown(sx, sy) : false),
   onClaimMove: (sx, sy) => bible.pointerMove(sx, sy),
   onClaimUp: () => bible.pointerUp(),
@@ -165,6 +223,10 @@ $('mute').onclick = () => {
   $('mute').textContent = synth.muted ? 'MUTED' : 'SOUND';
 };
 $('auto').onclick = () => setAuto(!auto);
+$('songs').onclick = openSheet;
+$('tx').onclick = closeSheet;
+$('tprev').onclick = () => { synth.ensure(); player.prev(); };
+$('tnext').onclick = () => { synth.ensure(); player.next(); };
 $('bibtn').onclick = () => { synth.ensure(); reader.open(); };
 // hover feedback: pointer cursor over anything touchable
 canvas.addEventListener('pointermove', (e) => {
