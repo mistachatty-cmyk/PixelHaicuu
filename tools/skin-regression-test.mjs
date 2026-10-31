@@ -16,7 +16,7 @@ try{
     look.mesh.awake=state!=='closed';const im=look.mesh.render(look.images.surface[color][state],pose,{dx:direction*5,dy:direction*10,r:direction*.05},[direction,direction],-direction*10,false);ctx.clearRect(0,0,512,512);ctx.drawImage(im,0,0);const d=ctx.getImageData(0,0,512,512).data;for(const i of protectedPixels)if(d[i]<245)holes++;frames++;
    }
    let pupilShift=null;
-   if(!['maroon','llama'].includes(id)){
+   if(id!=='maroon'){
     const [cx,cy,rx,ry]=look.m.surface.eyes[0],centroid=direction=>{look.mesh.awake=true;ctx.clearRect(0,0,512,512);ctx.drawImage(look.mesh.render(look.images.surface.original.calm,{...pose,nod:0,bounce:0,breath:0},{dx:0,dy:0,r:0},[direction,0],0,false),0,0);const d=ctx.getImageData(0,0,512,512).data;let n=0,total=0;for(let y=cy-ry;y<=cy+ry;y++)for(let x=cx-rx;x<=cx+rx;x++){if(Math.hypot((x-cx)/rx,(y-cy)/ry)>.55)continue;const i=(Math.round(y)*512+Math.round(x))*4;if(Math.max(d[i],d[i+1],d[i+2])<65){n++;total+=x;}}return total/n;};pupilShift=centroid(1)-centroid(-1);
    }
    return {id,renderer:look.mesh.gl?'WebGL':'Canvas',protectedPixels:protectedPixels.length,frames,interiorHoles:holes,pupilShift,rendererError:look.rendererError||null};

@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-31T21:15:00.826Z",
+  "testedAt": "2026-10-31T21:20:44.185Z",
   "reports": [
     {
       "id": "classic",
@@ -61,7 +61,7 @@
       "protectedPixels": 51423,
       "frames": 18,
       "interiorHoles": 0,
-      "pupilShift": null,
+      "pupilShift": 2.681054239877767,
       "rendererError": null
     },
     {
