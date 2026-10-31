@@ -1,0 +1,80 @@
+{
+  "testedAt": "2026-10-31T21:20:44.185Z",
+  "reports": [
+    {
+      "id": "classic",
+      "renderer": "WebGL",
+      "protectedPixels": 88009,
+      "frames": 18,
+      "interiorHoles": 0,
+      "pupilShift": 3.267307692307668,
+      "rendererError": null
+    },
+    {
+      "id": "artist",
+      "renderer": "WebGL",
+      "protectedPixels": 85387,
+      "frames": 18,
+      "interiorHoles": 0,
+      "pupilShift": 3.3366415244144605,
+      "rendererError": null
+    },
+    {
+      "id": "pinkmask",
+      "renderer": "WebGL",
+      "protectedPixels": 80373,
+      "frames": 18,
+      "interiorHoles": 0,
+      "pupilShift": 2.7781843938142003,
+      "rendererError": null
+    },
+    {
+      "id": "maroon",
+      "renderer": "WebGL",
+      "protectedPixels": 80536,
+      "frames": 18,
+      "interiorHoles": 0,
+      "pupilShift": null,
+      "rendererError": null
+    },
+    {
+      "id": "straw",
+      "renderer": "WebGL",
+      "protectedPixels": 79150,
+      "frames": 18,
+      "interiorHoles": 0,
+      "pupilShift": 3.090549348230894,
+      "rendererError": null
+    },
+    {
+      "id": "studio",
+      "renderer": "WebGL",
+      "protectedPixels": 74923,
+      "frames": 18,
+      "interiorHoles": 0,
+      "pupilShift": 3.1195256703948075,
+      "rendererError": null
+    },
+    {
+      "id": "llama",
+      "renderer": "WebGL",
+      "protectedPixels": 51423,
+      "frames": 18,
+      "interiorHoles": 0,
+      "pupilShift": 2.681054239877767,
+      "rendererError": null
+    },
+    {
+      "touch": true,
+      "colorPreferencePersists": true,
+      "effectsPreferencePersists": true,
+      "canopyVerticalScroll": true,
+      "worldTransparentPixels": 0,
+      "flowerPoke": true,
+      "errors": []
+    },
+    {
+      "webglUnavailable": "connected Canvas fallback renders and tracks gaze"
+    }
+  ]
+}

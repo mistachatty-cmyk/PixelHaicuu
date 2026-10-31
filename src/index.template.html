@@ -41,6 +41,12 @@
   #brand { top:calc(12px + env(safe-area-inset-top)); left:14px; right:auto; text-align:left; font-size:7px; line-height:1.9; color:#fff; text-shadow:1px 1px 0 var(--ink); opacity:0; transition:opacity 1s; }
   #credit { position:fixed; left:0; right:0; bottom:calc(5px + env(safe-area-inset-bottom)); z-index:0; text-align:center; font:400 clamp(8px,2.1vw,10px)/1.4 system-ui,sans-serif; letter-spacing:.02em; color:#fff; opacity:.38; pointer-events:none; white-space:nowrap; }
   #brand b { color:#ffe566; font-weight:normal; }
+  #appearance { position:fixed; right:12px; top:calc(12px + env(safe-area-inset-top)); z-index:4; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; max-width:156px; }
+  #appearance[hidden] { display:none; }
+  #appearance button { font-size:6px; padding:8px; min-height:44px; }
+  #appearance small { width:100%; text-align:right; font:9px/1 system-ui,sans-serif; color:#fff; text-shadow:1px 1px var(--ink); opacity:.6; }
+  body[data-effects="off"] button.pop { animation:none; }
+  @media(max-width:360px) { #brand { font-size:6px; } }
   #hud { bottom:calc(62px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; transform:translateY(14px); transition:opacity .8s, transform .8s; }
   #hud.on { opacity:1; transform:none; }
   .row { display:flex; gap:6px; align-items:center; justify-content:center; flex-wrap:wrap; pointer-events:none; }
@@ -52,7 +58,7 @@
   #look { min-width:130px; font-size:8px; }
   #track { font-size:7px; color:#fff; text-shadow:1px 1px 0 var(--ink); min-height:10px; }
   #scrollbtn { position:fixed; right:12px; top:50%; transform:translateY(-50%); pointer-events:auto; opacity:0; transition:opacity .8s; }
-  #scrollbtn.on { opacity:1; animation:nudge 1.6s ease-in-out infinite; }
+  #scrollbtn.on { opacity:1; }
   @keyframes nudge { 50% { transform:translateY(calc(-50% + 4px)); } }
   #skip { position:fixed; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); font-size:7px; opacity:.85; }
   #skip.gone { display:none; }
@@ -253,6 +259,7 @@
 <div id="haiku" class="ov" aria-live="polite"></div>
 <div id="credit">Powered by Lok Services · Designed by G6 Designs</div>
 <div id="brand" class="ov"><b>Llamasté PRODUCTIONS</b><br>EST. 1998</div>
+<div id="appearance" hidden><button id="colors" aria-pressed="true" title="Color correction on/off. Off shows the original lighter character palette.">COLOR ON</button><button id="effects" aria-label="Extra effects" aria-pressed="true">FX ON</button><small>v0.2.0</small></div>
 <button id="scrollbtn" aria-label="Scroll the world">▼</button>
 <div id="hud" class="ov">
   <div id="track" aria-live="polite"></div>

@@ -1,0 +1,29 @@
+✔ background backlog is discarded while future beats remain queued (1.090817ms)
+✔ only the current audible beat is emitted after delayed rendering (0.153376ms)
+✔ Pixel Q does not kick the rig hundreds of times after tab return (1.102895ms)
+✔ claimed drag does not scroll or tap and cancellation is distinct from release (1.650983ms)
+✔ mouth state selects mouth set, independently of the eye state (2.288652ms)
+✔ gaze is bounded and independent of beat motion, with follower lag (0.702585ms)
+✔ reduced motion returns a stable centered pose and keeps expressions (0.709846ms)
+✔ overlay hit rectangle uses width/height and the same camera and seat transform (0.256629ms)
+✔ invalid shared canvas is rejected, not silently stretched (0.394822ms)
+✔ failed manifest response rejects for a safe coded-rig fallback (0.364026ms)
+✔ original palette restores every approved master pixel, without facial replacement patches (59.628848ms)
+✔ color correction never changes alpha or cuts holes in any expression surface (185.894123ms)
+✔ canceling a Bible grab releases it without opening the reader or flinging (15.968341ms)
+✔ disabled extra effects stop allocating particles (2.529538ms)
+✔ petal drag detaches at threshold and releases with bounded velocity (198.170549ms)
+✔ cancelled petal gesture creates no released petal (186.314829ms)
+✔ short-screen bottom reserve raises ground and preserves planted flower offset (381.816881ms)
+✔ reduced motion freezes decoration and keeps camera and planted flowers usable (189.202013ms)
+✔ grass tap creates a flower and alpaca pet emits bounded feedback (178.776411ms)
+✔ camera stays inside the painted world during repeated hard scroll reversals (207.75007ms)
+✔ flower pokes create visible spring displacement and bounded repeat feedback (215.925482ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2698.218636

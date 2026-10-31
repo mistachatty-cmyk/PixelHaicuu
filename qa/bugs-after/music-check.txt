@@ -1,0 +1,21 @@
+PASS desktop sheet lists 5 Pixel Q songs (5)
+PASS desktop plays SAKURA HOUR -> look PINK MASK
+PASS desktop plays DREADLOCK DRIFT -> look MAROON MASK
+PASS desktop plays ALPACA AFTERNOON -> look Llamasté
+PASS desktop plays OM AT MIDNIGHT -> look ARTIST
+PASS desktop plays Llamasté LO-FI -> look PINK DREADS
+PASS desktop next song works
+PASS desktop prev song works
+PASS desktop sheet closes
+PASS desktop pause button
+PASS phone sheet lists 5 Pixel Q songs (5)
+PASS phone plays SAKURA HOUR -> look PINK MASK
+PASS phone plays DREADLOCK DRIFT -> look MAROON MASK
+PASS phone plays ALPACA AFTERNOON -> look Llamasté
+PASS phone plays OM AT MIDNIGHT -> look ARTIST
+PASS phone plays Llamasté LO-FI -> look PINK DREADS
+PASS phone next song works
+PASS phone prev song works
+PASS phone sheet closes
+PASS phone pause button
+no page errors

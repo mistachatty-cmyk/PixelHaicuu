@@ -1,0 +1,1 @@
+{"verifiedViewports":4,"looksPerViewport":7,"fallback":true,"reducedMotion":true,"reports":7}

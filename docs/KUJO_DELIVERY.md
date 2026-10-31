@@ -1,5 +1,7 @@
 # HaiCuu candidate · Kujo layers and interactions
 
+Latest implementation update: [v0.2.0 bug fixes](BUGFIX_V02.md). The page uses continuous native/corrected skins, bounded head and pupil tracking, a two-look texture cache, repaired gestures and visible flower reactions. Legacy authoring layers and 3D source remain available.
+
 Branch: `chatgpt/kujo-page`, built on Claude's `kujo-v2` with `handoff-docs` and his latest `claude/page-polish` merged into this feature branch. The owner authorized checkpoint pushes and subsequently requested production deployment. Commit `f569d24` is live; see [PRODUCTION_RELEASE](PRODUCTION_RELEASE.md). Main merges remain unapproved. Remote recovery checkpoints: library `921bcf3`, page `362f5da`.
 
 Claude's latest commits (`7ee092b` in the library, `d07e144` in the page) supply WOFF2 fonts, favicon, Bible link, landscape layout, drag-through petal pulling, llama reactions and calm mode. The merge preserves these alongside the illustrated rig and claimed touch gestures. Shared beat delivery retains his 150ms stale cutoff and emits only the latest audible beat.

@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "verifiedAt": "2026-10-31T21:18:31.717Z",
+  "libraryCheckpoint": "9399b14",
+  "builtHtmlSha256": "d8fee8e2f1939dcaf30d306355af9377f11feee777e819ff03bb196416ea30bf",
+  "libraryBehaviorTests": 21,
+  "renderFrames": 126,
+  "interiorHoles": 0,
+  "viewports": 4,
+  "looksPerViewport": 7,
+  "browserRuntimeErrors": 0,
+  "shaderEyeTracking": "2.68\u20133.34 source-pixel pupil displacement; visible-eye looks",
+  "paletteOriginal": "all seven calm surfaces pixel-identical to approved registered masters",
+  "noSourceMapsOrOfflineCodeCaches": true,
+  "deployed": false,
+  "sourceBaseCheckpoint": "ba53fcd",
+  "sourceRecordedIn": "release deployment record",
+  "webkit": "Blocked: host libraries unavailable; no Safari claim"
+}

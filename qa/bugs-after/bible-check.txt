@@ -1,0 +1,25 @@
+PASS desktop bible button visible
+PASS desktop bouncing bible found on canvas
+PASS desktop bible clear of HUD (y)
+PASS desktop tap on bible opens reader
+PASS desktop verse card has text
+PASS desktop new verse changes
+PASS desktop chapter renders verses (13)
+PASS desktop tap verse highlights
+PASS desktop psalm 23 loads
+PASS desktop next chapter works
+PASS desktop escape closes
+PASS desktop bible returns after close
+PASS phone bible button visible
+PASS phone bouncing bible found on canvas
+PASS phone bible clear of HUD (y)
+PASS phone tap on bible opens reader
+PASS phone verse card has text
+PASS phone new verse changes
+PASS phone chapter renders verses (21)
+PASS phone tap verse highlights
+PASS phone psalm 23 loads
+PASS phone next chapter works
+PASS phone escape closes
+PASS phone bible returns after close
+no page errors
