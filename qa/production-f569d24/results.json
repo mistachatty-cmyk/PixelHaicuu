@@ -1,0 +1,122 @@
+{
+  "testedAt": "2026-10-31T20:38:13.923Z",
+  "story": "HaiCuu loads the registered character layers, renders seven looks, reacts to input and music, and opens the Lok Bible reader without a backend.",
+  "reports": [
+    {
+      "viewport": "phone",
+      "size": [
+        430,
+        860
+      ],
+      "looks": [
+        "classic",
+        "artist",
+        "pinkmask",
+        "maroon",
+        "straw",
+        "studio",
+        "llama"
+      ],
+      "dragKeepsLook": true,
+      "holdKeepsLook": true,
+      "readerLink": true,
+      "focusTrap": true,
+      "musicChangesLook": true,
+      "footerBelowControls": true,
+      "browserErrors": [],
+      "failedAssets": [],
+      "externalRequests": []
+    },
+    {
+      "viewport": "desktop",
+      "size": [
+        1280,
+        720
+      ],
+      "looks": [
+        "classic",
+        "artist",
+        "pinkmask",
+        "maroon",
+        "straw",
+        "studio",
+        "llama"
+      ],
+      "dragKeepsLook": true,
+      "holdKeepsLook": true,
+      "readerLink": true,
+      "focusTrap": true,
+      "musicChangesLook": true,
+      "footerBelowControls": true,
+      "browserErrors": [],
+      "failedAssets": [],
+      "externalRequests": []
+    },
+    {
+      "viewport": "compact",
+      "size": [
+        320,
+        568
+      ],
+      "looks": [
+        "classic",
+        "artist",
+        "pinkmask",
+        "maroon",
+        "straw",
+        "studio",
+        "llama"
+      ],
+      "dragKeepsLook": true,
+      "holdKeepsLook": true,
+      "readerLink": true,
+      "focusTrap": true,
+      "musicChangesLook": true,
+      "footerBelowControls": true,
+      "browserErrors": [],
+      "failedAssets": [],
+      "externalRequests": []
+    },
+    {
+      "viewport": "landscape",
+      "size": [
+        844,
+        390
+      ],
+      "looks": [
+        "classic",
+        "artist",
+        "pinkmask",
+        "maroon",
+        "straw",
+        "studio",
+        "llama"
+      ],
+      "dragKeepsLook": true,
+      "holdKeepsLook": true,
+      "readerLink": true,
+      "focusTrap": true,
+      "musicChangesLook": true,
+      "footerBelowControls": true,
+      "browserErrors": [],
+      "failedAssets": [],
+      "externalRequests": []
+    },
+    {
+      "fallback": "missing Studio manifest",
+      "codedRigRemains": true,
+      "recoveryOnNextLook": true,
+      "runtimeErrors": []
+    },
+    {
+      "reducedMotion": true,
+      "stableCharacter": true
+    },
+    {
+      "touchInput": "Chromium CDP touchStart/move/end/cancel",
+      "dragKeepsLook": true,
+      "holdCancelKeepsLook": true,
+      "browserErrors": []
+    }
+  ]
+}
